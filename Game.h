@@ -16,9 +16,11 @@ float g_WindowHeight{ 720 };
 
 /*	- g_GridScaler =	Default must be one, will use GCD of the resolution to get a standard grid
 */
-const int g_GridScaler{4};
+const int g_GridScaler{2};
 int g_CellPixelSize{};
-Matrix2f g_Matrix{};
+int g_NrFrames{0};
+Matrix* g_pMatrix{ new Matrix{} };
+Enemy g_Enemy1;
 // Declare your own functions here
 void InitializeMatrix();
 void DrawGrid();

@@ -9,6 +9,7 @@ void Start()
 {
 	// initialize game resources here
 	InitializeMatrix();
+	
 }
 
 void Draw()
@@ -34,12 +35,20 @@ void Update(float elapsedSec)
 	//{
 	//	std::cout << "Left and up arrow keys are down\n";
 	//}
+	g_NrFrames++;
+	if (!(g_NrFrames % 30))
+	{
+		Neighbours* n = g_pMatrix->GetNeighbours(g_Enemy1.m_GridPos.x, g_Enemy1.m_GridPos.y);
+		g_pMatrix->MoveE(g_Enemy1, *n);
+		delete n;
+		std::cout << "Zombie position:\t" << g_Enemy1.m_GridPos.x << "x" << g_Enemy1.m_GridPos.y << '\n';
+	}
 }
 
 void End()
 {
 	// free game resources here
-	delete g_Matrix.pMatrix;
+	delete g_pMatrix;
 }
 #pragma endregion gameFunctions
 
@@ -103,70 +112,122 @@ void OnMouseUpEvent(const SDL_MouseButtonEvent& e)
 // Define your own functions here
 void InitializeMatrix()
 {
-	//----------------------------initializing matrix parameters-------------------------------------
+	//---------------------------------------initializing matrix parameters--------------------------------------------
 	/*	- cellPixelSize = The amount of pixels that defines the size of a grid cell.
 		- sizeX			= Amount of cells on the horizontal plane.
 		- sizeY			= Amount of cells on the vertical plane.
 		- arraySize		= Size of the array that defines the matrix.
+		- pArray		= Pointer to the array used as a matrix to represent our game world.
+		- mapArray		= Character array where we make the map to apply on our world matrix.
+						  Legend:
+									- i = impassible terrain.
+									- p = passable terrain.
+									- d = dangerous terrain, for example a bullet or a grid cell near an enemy.
+									- b = breakable terrain, a placable barrel/wall object.
+									- z = zombie.
+									- c = player character.
 	*/
 	g_CellPixelSize = gcd(int(g_WindowWidth), int(g_WindowHeight)) / g_GridScaler;
 	const int	sizeX{ int(g_WindowWidth) / g_CellPixelSize }, 
 				sizeY{ int(g_WindowHeight) / g_CellPixelSize },
 				arraySize{ int(sizeX * sizeY) };
 
-	std::cout << "Built matrix with dimensions " << sizeX << "x" << sizeY << " .\n";
+	std::cout << "Built matrix with dimensions " << sizeX << "x" << sizeY 
+		<< " .\nPixel count per grid cell is " << g_CellPixelSize << "\n";
 
-	MatrixElement* pMatrix = new MatrixElement[arraySize];
-
-	//--------------------------------Initializing matrix cells---------------------------------------
+	MatrixElement* pArray = new MatrixElement[arraySize];
+	MatrixChar mapArray{ sizeX, sizeY,
+		new char[arraySize]{'i','p','p','p','p','p','i','i','i','i','i','i','i','i','p','p','p','p','i','i','i','i','i','i','i','i','i','i','i','i','i','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
+							'i','p','p','z','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','i','i','i','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','i','i','i','i','i','i','i','i','i','i','i','i','i','p','p','p','p','i','i','i','i','i','i','i','i','p','p','p','p','p','i'} };
+	//------------------------------------------Initializing matrix cells----------------------------------------------
 	for (int i{}; i < arraySize; i++)
 	{
+		/*
+		Adding the points containing the pixel coordinates of the bottom left croner of the corresponding grid cells.
+		*/
 		const int x{ i % sizeX }, y{ i /  sizeX};
-		const Point2f pointToAdd{ float(x * g_CellPixelSize), g_WindowHeight - float(y * g_CellPixelSize) };
-		pMatrix[i].bottomLeft = pointToAdd;
-	}
+		const Point2f pointToAdd{ float(x * g_CellPixelSize), g_WindowHeight - float((y + 1) * g_CellPixelSize) };
+		const GridPosition gridPos{ x, y };
+		pArray[i].m_Position = pointToAdd;
+		pArray[i].m_GridPosition = gridPos;
 
-	g_Matrix.sizeX = sizeX;
-	g_Matrix.sizeY = sizeY;
-	g_Matrix.pMatrix = pMatrix;
+		/*
+		Building the map using the mapArray and applying it's defined states 
+		to the world matrix according to the legend(line:112).
+		*/
+		if (mapArray.m_pMatrix[i] == 'i')
+		{
+			pArray[i].m_WorldState = WorldState::impassable;
+		}
+		else if (mapArray.m_pMatrix[i] == 'p')
+		{
+			pArray[i].m_WorldState = WorldState::passable;
+		}
+		else if (mapArray.m_pMatrix[i] == 'z')
+		{
+			pArray[i].m_WorldState = WorldState::zombie;
+			g_Enemy1 = Enemy{gridPos, DirectionState::down};
+		}
+	}
+	//----------------------------------------------building the matrix-------------------------------------------------
+
+	g_pMatrix->m_SizeX = sizeX;
+	g_pMatrix->m_SizeY = sizeY;
+	g_pMatrix->m_pMatrix = pArray;
 }
 
 void DrawGrid()
 {
-	const int	maxSize{ g_Matrix.sizeX * g_Matrix.sizeY };
-	const float lineWidth{ 1.5f };
-	
-	for (int i{}; i < maxSize; i++ )
-	{
-		const int x{ i % g_Matrix.sizeX }, y{ i / g_Matrix.sizeX };
-		Point2f origin{ g_Matrix.GetElement(x, y).bottomLeft };
-		
-		if (y != 0)
-		{	
-			if (x != 0)
-			{
-				// left
-				Point2f left{ g_Matrix.GetElement(x - 1, y).bottomLeft };
-				DrawLine(origin, left, lineWidth);
-			}
-			if (x == g_Matrix.sizeX - 1)
-			{
-				DrawRect(origin, float(g_CellPixelSize), float(g_CellPixelSize), lineWidth);
-			}
-			if (y == g_Matrix.sizeY - 1)
-			{
-				DrawRect(origin.x, origin.y - g_CellPixelSize, float(g_CellPixelSize), float(g_CellPixelSize), lineWidth);
-			}
+	/*
+		- arraySize	= The size of the array that represents the matrix.
+		- lineWidth	= The pixel width of the lines.
+	*/
+	const int	arraySize{ g_pMatrix->m_SizeX * g_pMatrix->m_SizeY };
+	const float lineWidth{ 2.f };
 
-			//top
-			Point2f top{ g_Matrix.GetElement(x, y - 1).bottomLeft };
-			DrawLine(origin, top, lineWidth);
-		}
-		else if (x != 0)
+	for (int i{}; i < arraySize; i++)
+	{
+		const int x{ i % g_pMatrix->m_SizeX }, y{ i / g_pMatrix->m_SizeX };
+		Point2f origin{ g_pMatrix->GetElement(x, y).m_Position };
+
+		DrawRect(origin, float(g_CellPixelSize), float(g_CellPixelSize), lineWidth);
+		
+		switch (g_pMatrix->GetElement(x, y).m_WorldState)
 		{
-			// left
-			Point2f left{ g_Matrix.GetElement(x - 1, y).bottomLeft };
-			DrawLine(origin, left, lineWidth);
+		case WorldState::impassable:
+			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
+			break;
+		case WorldState::passable:
+			break;
+		case WorldState::breakable:
+			break;
+		case WorldState::danger:
+			break;
+		case WorldState::player:
+			break;
+		case WorldState::zombie:
+			SetColor(0.f, 1.f, 0.f);
+			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
+			SetColor(1.f, 0.f, 0.f);
+			break;
+		default:
+			break;
 		}
 	}
 }

@@ -1,0 +1,33 @@
+Zombie survivor topdown shooter game where you go through waves and your score increases.
+
+(do if extra time)
+Quality of game experience improvments:
+
+Procedural maps (or more maps)
+Different types of ammo (if we invent health system -> damage if not maybe different weapons can
+			 fire multiple shots, explosive ammo(can kill adjecent zombies))
+
+Different types of boxes (health/time it takes for zombie to destroy)
+Graphical improvements to sprites
+Adding a menu?
+Different types of zombies (sprites, health, speed)
+Traps? (maybe you can set them up like normal walls but the zombies will not identify them like
+	normal walls so they can collide with them and when they do they die)
+Shield system? (player can have a shield pick up that works as temp health)
+Pick ups (weapons, ammo, special effects(speed,...), )
+Different player classes (health, appearence, starting gun, )
+Special ability [it can differ with classes](some ability that can be charged up by killing 
+					     zombies or by "surviving" time)
+		: increased firerate, invincibility, kill all zombies on screen, shoot in all 
+		  directions, (if health system gain an ability to oneshot),
+
+
+Core gameplay mechanics:
+Shooting
+Movement
+Zombies
+Path finding for zombies
+Health system for player
+Score system
+Zombie spawning system
+Wave system (Increasing difficulty over Waves)

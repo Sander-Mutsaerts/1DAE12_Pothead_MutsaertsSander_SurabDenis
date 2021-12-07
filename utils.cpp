@@ -657,4 +657,21 @@ namespace utils
 		}
 		return gcd(b, a % b);
 	}
+
+	//TODO: Remove magic numbers.
+	void HatchSquare(const Point2f p, const float side, const float divisor)
+	{
+		const float	iterator{ side / divisor };
+		for (int i{}; i < 2 * divisor; i++)
+		{
+			if (i <= int(divisor))
+			{
+				DrawLine(p.x + i * iterator, p.y, p.x, p.y + i * iterator);
+			}
+			if (i > int(divisor))
+			{
+				DrawLine(p.x + side, p.y + fmodf(float(i), divisor) * iterator, p.x + fmodf(float(i), divisor) * iterator, p.y + side);
+			}
+		}
+	}
 }

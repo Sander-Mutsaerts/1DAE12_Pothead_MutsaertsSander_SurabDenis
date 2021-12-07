@@ -94,4 +94,5 @@ namespace utils
 	Vector2f ScalarProjection(const Vector2f normalized, const Vector2f projector);
 
 	int gcd(int a, int b);
+	void HatchSquare(const Point2f p, const float side, const float divisor);
 }

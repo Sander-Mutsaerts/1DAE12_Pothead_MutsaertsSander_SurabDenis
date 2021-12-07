@@ -78,27 +78,101 @@ struct Vector2f
 	float y;
 };
 
+struct MatrixChar
+{
+	int m_SizeX,
+		m_SizeY;
+	char* m_pMatrix;
+
+	MatrixChar(const int x, const int y, char* charArray);
+	~MatrixChar();
+};
+
 enum class WorldState {
 	danger, passable, impassable, breakable, zombie, player
 };
 
+enum class DirectionState {
+	up, right, down, left
+};
 
+struct GridPosition
+{
+	int x,
+		y;
+
+	GridPosition();
+	GridPosition(const int x, const int y);
+	~GridPosition();
+};
 
 struct MatrixElement 
 {
+	WorldState m_WorldState;
+	Point2f m_Position;
+	GridPosition m_GridPosition;
+	
 	MatrixElement();
-	explicit MatrixElement(WorldState worldState, Point2f bottomLeft);
-	WorldState worldState;
-	Point2f bottomLeft;
+	explicit MatrixElement(WorldState worldState, Point2f bottomLeft, GridPosition gridPos);
+	~MatrixElement();
 };
 
-struct Matrix2f
+struct Neighbours
 {
-	Matrix2f();
-	explicit Matrix2f(const int sizeX, const int sizeY, MatrixElement* pMatrix);
-	MatrixElement GetElement(int x, int y);
+	const int m_Count;
+	MatrixElement* m_pElements;
 
-	int sizeX;
-	int sizeY;
-	MatrixElement* pMatrix;
+	Neighbours(const int arraySize, MatrixElement* elements);
+	~Neighbours();
 };
+
+
+
+struct Enemy
+{
+	GridPosition m_GridPos;
+	DirectionState m_dir;
+	bool dead{ false };
+
+	Enemy();
+	Enemy(GridPosition gridPos, DirectionState dir);
+	~Enemy();
+};
+
+struct Player
+{
+	GridPosition m_GridPos;
+	DirectionState m_dir;
+
+	Player();
+
+	~Player();
+};
+
+struct Bullet
+{
+	GridPosition m_GridPos;
+	const DirectionState m_dir;
+
+	Bullet(DirectionState dir);
+	~Bullet();
+};
+
+struct Matrix
+{
+	int m_SizeX,
+		m_SizeY;
+	MatrixElement* m_pMatrix;
+
+	Matrix();
+	explicit Matrix(const int sizeX, const int sizeY, MatrixElement* pMatrix);
+	~Matrix();
+
+	MatrixElement GetElement(const int x, const int y);
+	Neighbours* GetNeighbours(const int x, const int y);
+	void UpdateCellState(const int x, const int y, WorldState state);
+	bool MoveE(Enemy& enemy, const Neighbours& neighbours);
+	bool MoveP(Player& player, const Neighbours& neighbours);
+	bool MoveB(Bullet& bullet, const Neighbours& neighbours);
+};
+
