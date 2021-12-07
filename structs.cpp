@@ -107,3 +107,28 @@ Vector2f::Vector2f(float x, float y)
 {
 }
 
+MatrixElement::MatrixElement()
+	: MatrixElement{ WorldState::passable, Point2f{} }
+{
+}
+
+MatrixElement::MatrixElement(WorldState worldState, Point2f bottomLeft)
+	: worldState(worldState), bottomLeft(bottomLeft)
+{
+}
+
+Matrix2f::Matrix2f()
+	: Matrix2f{ 1, 1, new MatrixElement{} }
+{
+}
+
+Matrix2f::Matrix2f(const int sizeX, const int sizeY, MatrixElement* pMatrix)
+	: sizeX(sizeX), sizeY(sizeY), pMatrix(pMatrix)
+{
+}
+
+MatrixElement Matrix2f::GetElement(int x, int y)
+{
+	const int index{ int(sizeX) * y + x };
+	return pMatrix[index];
+}

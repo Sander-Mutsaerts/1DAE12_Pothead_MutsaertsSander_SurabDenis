@@ -648,4 +648,13 @@ namespace utils
 		const Vector2f result{ normalized.x * scalar, normalized.y * scalar };
 		return result;
 	}
+
+	int gcd(int a, int b)
+	{
+		if (b == 0)
+		{
+			return a;
+		}
+		return gcd(b, a % b);
+	}
 }

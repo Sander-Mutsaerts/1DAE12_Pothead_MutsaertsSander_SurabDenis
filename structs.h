@@ -78,11 +78,27 @@ struct Vector2f
 	float y;
 };
 
+enum class WorldState {
+	danger, passable, impassable, breakable, zombie, player
+};
+
+
+
+struct MatrixElement 
+{
+	MatrixElement();
+	explicit MatrixElement(WorldState worldState, Point2f bottomLeft);
+	WorldState worldState;
+	Point2f bottomLeft;
+};
+
 struct Matrix2f
 {
 	Matrix2f();
-	explicit Matrix2f(float sizeX, float sizeY);
+	explicit Matrix2f(const int sizeX, const int sizeY, MatrixElement* pMatrix);
+	MatrixElement GetElement(int x, int y);
 
-	float sizeX;
-	float sizeY;
+	int sizeX;
+	int sizeY;
+	MatrixElement* pMatrix;
 };

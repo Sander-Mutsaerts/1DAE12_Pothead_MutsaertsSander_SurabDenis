@@ -92,4 +92,6 @@ namespace utils
 	float AngleBetween(const Vector2f vector1, const Vector2f vector2);
 	bool AreEqual(const Vector2f vector1, const Vector2f vector2);
 	Vector2f ScalarProjection(const Vector2f normalized, const Vector2f projector);
+
+	int gcd(int a, int b);
 }

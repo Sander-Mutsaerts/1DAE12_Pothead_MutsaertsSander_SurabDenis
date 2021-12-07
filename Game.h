@@ -2,11 +2,11 @@
 using namespace utils;
 #pragma region gameInformation
 // Set your name and group in the title here
-std::string g_WindowTitle{ "Project name - Name, firstname - 1DAExx" };
+std::string g_WindowTitle{ "Pothead - Mutsaerts Sander, Surab Denis - 1DAE12" };
 
 // Change the window dimensions here
-float g_WindowWidth{ 500 };
-float g_WindowHeight{ 300 };
+float g_WindowWidth{ 1280 };
+float g_WindowHeight{ 720 };
 #pragma endregion gameInformation
 
 
@@ -14,8 +14,16 @@ float g_WindowHeight{ 300 };
 #pragma region ownDeclarations
 // Declare your own global variables here
 
+/*	- g_GridScaler =	Default must be one, will use GCD of the resolution to get a standard grid
+*/
+//want to know how many rows and columns are there 3 and 6 working weirdly also Sanders pc almost crashed when 20
+//basic grid size while gGridScaler is 1 is 16x9 so i assume it goes up xgGridScaler on both axis
+const int g_GridScaler{4};
+int g_CellPixelSize{};
+Matrix2f g_Matrix{};
 // Declare your own functions here
-
+void InitializeMatrix();
+void DrawGrid();
 #pragma endregion ownDeclarations
 
 #pragma region gameFunctions											
