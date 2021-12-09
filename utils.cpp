@@ -658,7 +658,6 @@ namespace utils
 		return gcd(b, a % b);
 	}
 
-	//TODO: Remove magic numbers.
 	void HatchSquare(const Point2f p, const float side, const float divisor)
 	{
 		const float	iterator{ side / divisor };

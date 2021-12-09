@@ -20,7 +20,10 @@ const int g_GridScaler{2};
 int g_CellPixelSize{};
 int g_NrFrames{0};
 Matrix* g_pMatrix{ new Matrix{} };
-Enemy g_Enemy1;
+
+Enemy* g_Enemy{nullptr};
+Player* g_Player{nullptr};
+Bullet* g_Bullet{nullptr};
 // Declare your own functions here
 void InitializeMatrix();
 void DrawGrid();

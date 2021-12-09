@@ -26,22 +26,124 @@ void Update(float elapsedSec)
 	// process input, do physics 
 
 	// e.g. Check keyboard state
-	//const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
-	//if ( pStates[SDL_SCANCODE_RIGHT] )
-	//{
-	//	std::cout << "Right arrow key is down\n";
-	//}
-	//if ( pStates[SDL_SCANCODE_LEFT] && pStates[SDL_SCANCODE_UP])
-	//{
-	//	std::cout << "Left and up arrow keys are down\n";
-	//}
 	g_NrFrames++;
-	if (!(g_NrFrames % 30))
+	if (!(g_NrFrames % 30) && g_Player != nullptr)
 	{
-		Neighbours* n = g_pMatrix->GetNeighbours(g_Enemy1.m_GridPos.x, g_Enemy1.m_GridPos.y);
-		g_pMatrix->MoveE(g_Enemy1, *n);
-		delete n;
-		std::cout << "Zombie position:\t" << g_Enemy1.m_GridPos.x << "x" << g_Enemy1.m_GridPos.y << '\n';
+		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
+		if (pStates[SDL_SCANCODE_D])
+		{
+			std::cout << "\'d\' key is down\n";
+			if (g_Player->m_dir == DirectionState::right)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
+				 bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				delete n;
+
+				if (!moved)
+				{
+					if (g_Player->dead)
+					{
+						// Delete player here.
+						delete g_Player;
+						g_Player = nullptr;
+					}
+				}
+			}
+			else
+			{
+				g_Player->m_dir = DirectionState::right;
+			}
+		}
+		if (pStates[SDL_SCANCODE_A])
+		{
+			std::cout << "\'a\' keys is down\n";
+			if (g_Player->m_dir == DirectionState::left)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				delete n;
+
+				if (!moved)
+				{
+					if (g_Player->dead)
+					{
+						// Delete player here.
+						delete g_Player;
+						g_Player = nullptr;
+					}
+				}
+			}
+			else
+			{
+				g_Player->m_dir = DirectionState::left;
+			}
+		}
+		if (pStates[SDL_SCANCODE_W])
+		{
+			std::cout << "\'w\' keys is down\n";
+			if (g_Player->m_dir == DirectionState::up)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				delete n;
+
+				if (!moved)
+				{
+					if (g_Player->dead)
+					{
+						// Delete player here.
+						delete g_Player;
+						g_Player = nullptr;
+					}
+				}
+			}
+			else
+			{
+				g_Player->m_dir = DirectionState::up;
+			}
+		}
+		if (pStates[SDL_SCANCODE_S])
+		{
+			std::cout << "\'s\' keys is down\n";
+			if (g_Player->m_dir == DirectionState::down)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				delete n;
+
+				if (!moved)
+				{
+					if (g_Player->dead)
+					{
+						// Delete player here.
+						delete g_Player;
+						g_Player = nullptr;
+					}
+				}
+			}
+			else
+			{
+				g_Player->m_dir = DirectionState::down;
+			}
+		}
+
+
+		if (g_Enemy != nullptr)
+		{
+			Neighbours* n = g_pMatrix->GetNeighbours(g_Enemy->m_GridPos.x, g_Enemy->m_GridPos.y);
+			bool moved = g_pMatrix->MoveE(*g_Enemy, *n);
+			delete n;
+
+			if (!moved)
+			{
+				if (g_Enemy->dead)
+				{
+					// Delete enemies here.
+					delete g_Enemy;
+					g_Enemy = nullptr;
+				}
+			}
+		}
 	}
 }
 
@@ -49,6 +151,7 @@ void End()
 {
 	// free game resources here
 	delete g_pMatrix;
+	delete g_Bullet;
 }
 #pragma endregion gameFunctions
 
@@ -148,9 +251,9 @@ void InitializeMatrix()
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','c','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','b','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
@@ -182,7 +285,17 @@ void InitializeMatrix()
 		else if (mapArray.m_pMatrix[i] == 'z')
 		{
 			pArray[i].m_WorldState = WorldState::zombie;
-			g_Enemy1 = Enemy{gridPos, DirectionState::down};
+			g_Enemy = new Enemy{ gridPos, DirectionState::down };
+		}
+		else if (mapArray.m_pMatrix[i] == 'c')
+		{
+			pArray[i].m_WorldState = WorldState::player;
+			g_Player = new Player{ gridPos, DirectionState::down };
+		}
+		else if (mapArray.m_pMatrix[i] == 'b')
+		{
+			pArray[i].m_WorldState = WorldState::danger;
+			g_Bullet = new Bullet{ gridPos, DirectionState::down };
 		}
 	}
 	//----------------------------------------------building the matrix-------------------------------------------------
@@ -218,8 +331,14 @@ void DrawGrid()
 		case WorldState::breakable:
 			break;
 		case WorldState::danger:
+			SetColor(0.f, 0.5f, 0.5f);
+			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
+			SetColor(1.f, 0.f, 0.f);
 			break;
 		case WorldState::player:
+			SetColor(0.f, 0.f, 1.f);
+			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
+			SetColor(1.f, 0.f, 0.f);
 			break;
 		case WorldState::zombie:
 			SetColor(0.f, 1.f, 0.f);

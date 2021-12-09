@@ -268,6 +268,7 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
 				{
 					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
 					return false;
 				}
 			}
@@ -293,6 +294,7 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
 				{
 					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
 					return false;
 				}
 			}
@@ -318,6 +320,7 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
 				{
 					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
 					return false;
 				}
 			}
@@ -343,6 +346,7 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
 				{
 					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
 					return false;
 				}
 			}
@@ -357,7 +361,116 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 
 bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 {
-	return false;
+	switch (player.m_dir)
+	{
+	case DirectionState::up:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x)
+				&& (player.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
+						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					player.m_GridPos.y--;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::right:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((player.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPosition.x)
+				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
+						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					player.m_GridPos.x++;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::down:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x)
+				&& (player.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
+						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					player.m_GridPos.y++;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::left:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((player.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPosition.x)
+				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
+						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					player.m_GridPos.x--;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::danger)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	default:
+		return false;
+		break;
+	}
 }
 
 bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
@@ -409,12 +522,22 @@ Player::Player()
 {
 }
 
+Player::Player(GridPosition gridPos, DirectionState dir)
+	: m_GridPos(gridPos), m_dir(dir)
+{
+}
+
 Player::~Player()
 {
 }
 
-Bullet::Bullet(DirectionState dir)
-	:m_dir(dir)
+Bullet::Bullet()
+	:m_GridPos(GridPosition{}), m_dir(DirectionState{})
+{
+}
+
+Bullet::Bullet(GridPosition gridPos, DirectionState dir)
+	:m_GridPos(gridPos), m_dir(dir)
 {
 }
 

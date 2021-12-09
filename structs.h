@@ -124,9 +124,9 @@ struct Neighbours
 
 	Neighbours(const int arraySize, MatrixElement* elements);
 	~Neighbours();
+
+
 };
-
-
 
 struct Enemy
 {
@@ -143,18 +143,22 @@ struct Player
 {
 	GridPosition m_GridPos;
 	DirectionState m_dir;
+	bool dead{ false };
 
 	Player();
-
+	Player(GridPosition gridPos, DirectionState dir);
 	~Player();
+
+
 };
 
 struct Bullet
 {
 	GridPosition m_GridPos;
-	const DirectionState m_dir;
+	DirectionState m_dir;
 
-	Bullet(DirectionState dir);
+	Bullet();
+	Bullet(GridPosition gridPos, DirectionState dir);
 	~Bullet();
 };
 
