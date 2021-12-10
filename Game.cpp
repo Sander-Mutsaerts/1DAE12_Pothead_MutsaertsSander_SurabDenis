@@ -127,7 +127,6 @@ void Update(float elapsedSec)
 			}
 		}
 
-
 		if (g_Enemy != nullptr)
 		{
 			Neighbours* n = g_pMatrix->GetNeighbours(g_Enemy->m_GridPos.x, g_Enemy->m_GridPos.y);

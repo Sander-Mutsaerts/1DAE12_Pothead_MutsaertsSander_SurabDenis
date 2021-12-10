@@ -1,0 +1,17 @@
+﻿  pch.cpp
+  Core.cpp
+  Game.cpp
+  main.cpp
+  structs.cpp
+  utils.cpp
+  Generating code
+  3 of 126 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  GridGame.vcxproj -> C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\GridGame\Release\GridGame.exe
+  COPY THE DLL FILES
+  0 File(s) copied
+  0 File(s) copied
+  0 File(s) copied
+  0 File(s) copied
