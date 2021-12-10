@@ -9,7 +9,7 @@ void Start()
 {
 	// initialize game resources here
 	InitializeMatrix();
-	
+	InitializePlayer();
 }
 
 void Draw()
@@ -349,4 +349,10 @@ void DrawGrid()
 		}
 	}
 }
+
+void InitializePlayer()
+{
+	bool wasInicializationSuccess{};
+}
+
 #pragma endregion ownDefinitions
