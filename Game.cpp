@@ -9,7 +9,7 @@ void Start()
 {
 	// initialize game resources here
 	InitializeMatrix();
-	InitializePlayer();
+	//InitializePlayer();
 }
 
 void Draw()
