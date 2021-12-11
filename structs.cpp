@@ -551,6 +551,7 @@ NodeList::NodeList()
 }
 
 NodeList::NodeList(const int size, const int nodeCount, Node* pNode)
+	:m_Size(size), m_NodeCount(nodeCount), m_pList(pNode)
 {
 }
 
