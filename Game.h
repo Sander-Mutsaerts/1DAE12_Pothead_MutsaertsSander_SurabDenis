@@ -21,12 +21,37 @@ int g_CellPixelSize{};
 int g_NrFrames{0};
 Matrix* g_pMatrix{ new Matrix{} };
 
-Enemy* g_Enemy{nullptr};
-Player* g_Player{nullptr};
-Bullet* g_Bullet{nullptr};
+Enemy* g_pEnemy{nullptr};
+Player* g_pPlayer{nullptr};
+Bullet* g_pBullet{nullptr};
+
+//Textures globals
+// g_AmountOfText represent the number of directions our objects can move around the grid basic is 4 later can work up to 8 (diagonal)
+const int g_AmountOfText{4};
+Texture g_PlayerTextures[g_AmountOfText]{};
+Texture* g_pPlayerTexture{nullptr};
+
+Texture g_GunTextures[g_AmountOfText]{};
+Texture* g_pGunTextures{};
+
+Texture g_EnemyTextures[g_AmountOfText]{};
+Texture* g_pEnemyTexture{nullptr};
+
+Texture g_Unpassable{};
+Texture g_Passable{};
+
+Texture g_BulletTextures[g_AmountOfText]{};
+Texture* g_pBulletTextures{};
+
 // Declare your own functions here
 void InitializeMatrix();
+void InitializePlayer();
+void InitializeEnemy();
+void InitializeGun();
+void InitializeBullet();
+void InitializeGrid();
 void DrawGrid();
+void DrawTextures();
 #pragma endregion ownDeclarations
 
 #pragma region gameFunctions											

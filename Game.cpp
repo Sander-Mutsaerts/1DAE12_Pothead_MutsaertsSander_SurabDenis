@@ -10,6 +10,10 @@ void Start()
 	// initialize game resources here
 	InitializeMatrix();
 	InitializePlayer();
+	InitializeEnemy();
+	InitializeGrid();
+	InitializeGun();
+	InitializeBullet();
 }
 
 void Draw()
@@ -19,6 +23,7 @@ void Draw()
 	// Put your own draw statements here
 	SetColor(1.f, 0.f, 0.f);
 	DrawGrid();
+	DrawTextures();
 }
 
 void Update(float elapsedSec)
@@ -27,119 +32,119 @@ void Update(float elapsedSec)
 
 	// e.g. Check keyboard state
 	g_NrFrames++;
-	if (!(g_NrFrames % 30) && g_Player != nullptr)
+	if (!(g_NrFrames % 30) && g_pPlayer != nullptr)
 	{
 		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
 		if (pStates[SDL_SCANCODE_D])
 		{
 			std::cout << "\'d\' key is down\n";
-			if (g_Player->m_dir == DirectionState::right)
+			if (g_pPlayer->m_dir == DirectionState::right)
 			{
-				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
-				 bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
+				 bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 
 				if (!moved)
 				{
-					if (g_Player->dead)
+					if (g_pPlayer->dead)
 					{
 						// Delete player here.
-						delete g_Player;
-						g_Player = nullptr;
+						delete g_pPlayer;
+						g_pPlayer = nullptr;
 					}
 				}
 			}
 			else
 			{
-				g_Player->m_dir = DirectionState::right;
+				g_pPlayer->m_dir = DirectionState::right;
 			}
 		}
 		if (pStates[SDL_SCANCODE_A])
 		{
 			std::cout << "\'a\' keys is down\n";
-			if (g_Player->m_dir == DirectionState::left)
+			if (g_pPlayer->m_dir == DirectionState::left)
 			{
-				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
-				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 
 				if (!moved)
 				{
-					if (g_Player->dead)
+					if (g_pPlayer->dead)
 					{
 						// Delete player here.
-						delete g_Player;
-						g_Player = nullptr;
+						delete g_pPlayer;
+						g_pPlayer = nullptr;
 					}
 				}
 			}
 			else
 			{
-				g_Player->m_dir = DirectionState::left;
+				g_pPlayer->m_dir = DirectionState::left;
 			}
 		}
 		if (pStates[SDL_SCANCODE_W])
 		{
 			std::cout << "\'w\' keys is down\n";
-			if (g_Player->m_dir == DirectionState::up)
+			if (g_pPlayer->m_dir == DirectionState::up)
 			{
-				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
-				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 
 				if (!moved)
 				{
-					if (g_Player->dead)
+					if (g_pPlayer->dead)
 					{
 						// Delete player here.
-						delete g_Player;
-						g_Player = nullptr;
+						delete g_pPlayer;
+						g_pPlayer = nullptr;
 					}
 				}
 			}
 			else
 			{
-				g_Player->m_dir = DirectionState::up;
+				g_pPlayer->m_dir = DirectionState::up;
 			}
 		}
 		if (pStates[SDL_SCANCODE_S])
 		{
 			std::cout << "\'s\' keys is down\n";
-			if (g_Player->m_dir == DirectionState::down)
+			if (g_pPlayer->m_dir == DirectionState::down)
 			{
-				Neighbours* n = g_pMatrix->GetNeighbours(g_Player->m_GridPos.x, g_Player->m_GridPos.y);
-				bool moved = g_pMatrix->MoveP(*g_Player, *n);
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
+				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 
 				if (!moved)
 				{
-					if (g_Player->dead)
+					if (g_pPlayer->dead)
 					{
 						// Delete player here.
-						delete g_Player;
-						g_Player = nullptr;
+						delete g_pPlayer;
+						g_pPlayer = nullptr;
 					}
 				}
 			}
 			else
 			{
-				g_Player->m_dir = DirectionState::down;
+				g_pPlayer->m_dir = DirectionState::down;
 			}
 		}
 
-		if (g_Enemy != nullptr)
+		if (g_pEnemy != nullptr)
 		{
-			Neighbours* n = g_pMatrix->GetNeighbours(g_Enemy->m_GridPos.x, g_Enemy->m_GridPos.y);
-			bool moved = g_pMatrix->MoveE(*g_Enemy, *n);
+			Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+			bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
 			delete n;
 
 			if (!moved)
 			{
-				if (g_Enemy->dead)
+				if (g_pEnemy->dead)
 				{
 					// Delete enemies here.
-					delete g_Enemy;
-					g_Enemy = nullptr;
+					delete g_pEnemy;
+					g_pEnemy = nullptr;
 				}
 			}
 		}
@@ -150,7 +155,7 @@ void End()
 {
 	// free game resources here
 	delete g_pMatrix;
-	delete g_Bullet;
+	delete g_pBullet;
 }
 #pragma endregion gameFunctions
 
@@ -284,17 +289,17 @@ void InitializeMatrix()
 		else if (mapArray.m_pMatrix[i] == 'z')
 		{
 			pArray[i].m_WorldState = WorldState::zombie;
-			g_Enemy = new Enemy{ gridPos, DirectionState::down };
+			g_pEnemy = new Enemy{ gridPos, DirectionState::up};
 		}
 		else if (mapArray.m_pMatrix[i] == 'c')
 		{
 			pArray[i].m_WorldState = WorldState::player;
-			g_Player = new Player{ gridPos, DirectionState::down };
+			g_pPlayer = new Player{ gridPos, DirectionState::down };
 		}
 		else if (mapArray.m_pMatrix[i] == 'b')
 		{
 			pArray[i].m_WorldState = WorldState::danger;
-			g_Bullet = new Bullet{ gridPos, DirectionState::down };
+			g_pBullet = new Bullet{ gridPos, DirectionState::down };
 		}
 	}
 	//----------------------------------------------building the matrix-------------------------------------------------
@@ -318,31 +323,13 @@ void DrawGrid()
 		const int x{ i % g_pMatrix->m_SizeX }, y{ i / g_pMatrix->m_SizeX };
 		Point2f origin{ g_pMatrix->GetElement(x, y).m_Position };
 
-		DrawRect(origin, float(g_CellPixelSize), float(g_CellPixelSize), lineWidth);
-		
+		//DrawRect(origin, float(g_CellPixelSize), float(g_CellPixelSize), lineWidth);
+		DrawTexture(g_Passable, origin);
 		switch (g_pMatrix->GetElement(x, y).m_WorldState)
 		{
 		case WorldState::impassable:
-			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
-			break;
-		case WorldState::passable:
-			break;
-		case WorldState::breakable:
-			break;
-		case WorldState::danger:
-			SetColor(0.f, 0.5f, 0.5f);
-			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
-			SetColor(1.f, 0.f, 0.f);
-			break;
-		case WorldState::player:
-			SetColor(0.f, 0.f, 1.f);
-			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
-			SetColor(1.f, 0.f, 0.f);
-			break;
-		case WorldState::zombie:
-			SetColor(0.f, 1.f, 0.f);
-			HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
-			SetColor(1.f, 0.f, 0.f);
+			//HatchSquare(g_pMatrix->GetElement(x, y).m_Position, float(g_CellPixelSize), 15);
+			DrawTexture(g_Unpassable, origin);
 			break;
 		default:
 			break;
@@ -350,9 +337,161 @@ void DrawGrid()
 	}
 }
 
+void DrawTextures()
+{
+	/*
+	- arraySize	= The size of the array that represents the matrix.
+*/
+	const int	arraySize{ g_pMatrix->m_SizeX * g_pMatrix->m_SizeY };
+
+	for (int i{}; i < arraySize; i++)
+	{
+		const int x{ i % g_pMatrix->m_SizeX }, y{ i / g_pMatrix->m_SizeX };
+		Point2f origin{ g_pMatrix->GetElement(x, y).m_Position };
+		Point2f weaponPos{ origin };
+		int weaponOffset{ 21 };
+		Point2f enemyPos{ origin };
+		int enemyOffset{ 13 };
+
+		switch (g_pMatrix->GetElement(x, y).m_WorldState)
+		{
+		case WorldState::passable:
+			break;
+		case WorldState::impassable:
+
+			break;
+		case WorldState::breakable:
+
+			break;
+		case WorldState::danger:
+			DrawTexture(g_BulletTextures[int(g_pBullet->m_dir)], origin);
+			break;
+		case WorldState::player:
+			if (g_pPlayer->m_dir == DirectionState::left)
+			{
+				weaponPos.x -= weaponOffset;
+				DrawTexture(g_pGunTextures[int(g_pPlayer->m_dir)], weaponPos);
+			}
+			else if (g_pPlayer->m_dir == DirectionState::down)
+			{
+				weaponPos.y -= weaponOffset;
+				DrawTexture(g_pGunTextures[int(g_pPlayer->m_dir)], weaponPos);
+			}
+			else
+			{
+				DrawTexture(g_pGunTextures[int(g_pPlayer->m_dir)], origin);
+			}
+			DrawTexture(g_pPlayerTexture[int(g_pPlayer->m_dir)], origin);
+			break;
+		case WorldState::zombie:
+			if (g_pEnemy->m_dir == DirectionState::left)
+			{
+				enemyPos.x -= enemyOffset;
+				DrawTexture(g_pEnemyTexture[int(g_pEnemy->m_dir)], enemyPos);
+			}
+			else if (g_pEnemy->m_dir == DirectionState::down)
+			{
+				enemyPos.y -= enemyOffset;
+				DrawTexture(g_pEnemyTexture[int(g_pEnemy->m_dir)], enemyPos);
+			}
+			else
+			{
+				DrawTexture(g_pEnemyTexture[int(g_pEnemy->m_dir)], origin);
+			}
+			//std::cout << origin.x << "     " << origin.y << '\n'; 120 560
+			break;
+		default:
+			break;
+		}
+	}
+}
+//TODO: Somehow try to change the messy was of inicializing if possible
 void InitializePlayer()
 {
-	bool wasInicializationSuccess{};
+	bool iniSuccess[g_AmountOfText]{};
+	iniSuccess[0] = TextureFromFile("Resources/Player/p_up.png", g_PlayerTextures[0]);
+	iniSuccess[1] = TextureFromFile("Resources/Player/p_right.png", g_PlayerTextures[1]);
+	iniSuccess[2] = TextureFromFile("Resources/Player/p_down.png", g_PlayerTextures[2]);
+	iniSuccess[3] = TextureFromFile("Resources/Player/p_left.png", g_PlayerTextures[3]);
+
+	for (int i{}; i < g_AmountOfText; i++)
+	{
+		if (!iniSuccess[i])
+		{
+			std::cout << "Texture for player failed to load INDEX: " << iniSuccess[i] << '\n';
+		}
+	}
+	g_pPlayerTexture = g_PlayerTextures;
 }
 
+void InitializeEnemy()
+{
+	bool iniSuccess[g_AmountOfText]{};
+	iniSuccess[0] = TextureFromFile("Resources/Enemy/z_up.png", g_EnemyTextures[0]);
+	iniSuccess[1] = TextureFromFile("Resources/Enemy/z_right.png", g_EnemyTextures[1]);
+	iniSuccess[2] = TextureFromFile("Resources/Enemy/z_down.png", g_EnemyTextures[2]);
+	iniSuccess[3] = TextureFromFile("Resources/Enemy/z_left.png", g_EnemyTextures[3]);
+
+	for (int i{}; i < g_AmountOfText; i++)
+	{
+		if (!iniSuccess[i])
+		{
+			std::cout << "Texture for enemy failed to load INDEX: " << iniSuccess[i] << '\n';
+		}
+		std::cout << "[" << g_EnemyTextures[i].width << ", " << g_EnemyTextures[i].height << "]\n";
+	}
+	g_pEnemyTexture = g_EnemyTextures;
+}
+
+void InitializeGun()
+{
+	bool iniSuccess[g_AmountOfText]{};
+	iniSuccess[0] = TextureFromFile("Resources/Weapons/p_up.png", g_GunTextures[0]);
+	iniSuccess[1] = TextureFromFile("Resources/Weapons/p_right.png", g_GunTextures[1]);
+	iniSuccess[2] = TextureFromFile("Resources/Weapons/p_down.png", g_GunTextures[2]);
+	iniSuccess[3] = TextureFromFile("Resources/Weapons/p_left.png", g_GunTextures[3]);
+
+	for (int i{}; i < g_AmountOfText; i++)
+	{
+		if (!iniSuccess[i])
+		{
+			std::cout << "Texture for player failed to load INDEX: " << iniSuccess[i] << '\n';
+		}
+	}
+	g_pGunTextures = g_GunTextures;
+}
+
+//TODO: variablelize changing the maps with 1 variable
+void InitializeGrid()
+{
+	//changing the letter before _Pass.png and _Unpass.png to e, s, g changes the map
+	bool iniSuccess{};
+	iniSuccess = TextureFromFile("Resources/Environment/e_Pass.png", g_Passable);
+	if (!iniSuccess)
+	{
+		std::cout << "Texture for passable failed to load\n";
+	}
+	iniSuccess = TextureFromFile("Resources/Environment/e_Unpass.png", g_Unpassable);
+	if (!iniSuccess)
+	{
+		std::cout << "Texture for unpassable failed to load\n";
+	}
+}
+void InitializeBullet()
+{
+	bool iniSuccess[g_AmountOfText]{};
+	iniSuccess[0] = TextureFromFile("Resources/Bullet/b_up.png", g_BulletTextures[0]);
+	iniSuccess[1] = TextureFromFile("Resources/Bullet/b_right.png", g_BulletTextures[1]);
+	iniSuccess[2] = TextureFromFile("Resources/Bullet/b_down.png", g_BulletTextures[2]);
+	iniSuccess[3] = TextureFromFile("Resources/Bullet/b_left.png", g_BulletTextures[3]);
+
+	for (int i{}; i < g_AmountOfText; i++)
+	{
+		if (!iniSuccess[i])
+		{
+			std::cout << "Texture for bullet failed to load INDEX: " << iniSuccess[i] << '\n';
+		}
+	}
+	g_pBulletTextures = g_BulletTextures;
+}
 #pragma endregion ownDefinitions
