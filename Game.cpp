@@ -24,6 +24,9 @@ void Draw()
 	SetColor(1.f, 0.f, 0.f);
 	DrawGrid();
 	DrawTextures();
+
+	//TEMP:
+	MapAllNodes();
 }
 
 void Update(float elapsedSec)
@@ -461,7 +464,6 @@ void InitializeGun()
 	g_pGunTextures = g_GunTextures;
 }
 
-//TODO: variablelize changing the maps with 1 variable
 void InitializeGrid()
 {
 	//changing the letter before _Pass.png and _Unpass.png to e, s, g changes the map
@@ -494,4 +496,5 @@ void InitializeBullet()
 	}
 	g_pBulletTextures = g_BulletTextures;
 }
+
 #pragma endregion ownDefinitions

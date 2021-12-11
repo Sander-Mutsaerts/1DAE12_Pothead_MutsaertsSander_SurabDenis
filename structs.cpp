@@ -602,6 +602,7 @@ void NodeList::FillFromLeft()
 */
 void NodeList::AddOnIndex(const int index)
 {
+	NodeList::m_pList[index];
 }
 
 /*
@@ -611,7 +612,9 @@ void NodeList::AddOnIndex(const int index)
 */
 Node NodeList::PopOnIndex(const int index)
 {
-	return Node{};
+	Node temp{ NodeList::m_pList[index] };
+	ShiftLeftFromIndex(index);
+	return Node{ temp };
 }
 
 /*

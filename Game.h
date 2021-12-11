@@ -52,6 +52,7 @@ void InitializeBullet();
 void InitializeGrid();
 void DrawGrid();
 void DrawTextures();
+
 #pragma endregion ownDeclarations
 
 #pragma region gameFunctions											
