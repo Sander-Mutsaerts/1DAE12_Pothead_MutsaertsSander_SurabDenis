@@ -121,29 +121,35 @@ struct MatrixElement
 
 struct Node
 {
-	Node* m_Parent;
-	bool m_Obstacle;
-	bool m_Visited;
+	Node* m_pParent;
+	bool m_Obstacle,
+			m_Visited;
 	float m_GlobalGoal;
 	float m_LocalGoal;
 	GridPosition m_GridPos;
-	Node* pNeighbours;
 
 	Node();
-	//Node();
+	Node(bool obstacle, bool initialized, GridPosition gridPos);
 	~Node();
+};
 
-	void SetNeighbours(MatrixElement* MatrixNeighbours);
+struct NodeNeighbours
+{
+	const int m_Count;
+	Node* m_pNodes;
+
+	NodeNeighbours(const int arraySize, Node* nodes);
+	~NodeNeighbours();
 };
 
 struct NodeList
 {
 	int m_Size;
 	int m_NodeCount;
-	Node* m_pList;
+	GridPosition* m_pList;
 
 	NodeList();
-	NodeList(const int size, const int nodeCount, Node* pNode);
+	NodeList(const int size, const int nodeCount, GridPosition* pPosArray);
 	~NodeList();
 
 	void SwapElements(const int index1, const int index2);
@@ -162,8 +168,6 @@ struct Neighbours
 
 	Neighbours(const int arraySize, MatrixElement* elements);
 	~Neighbours();
-
-
 };
 
 struct Enemy
@@ -216,5 +220,21 @@ struct Matrix
 	bool MoveE(Enemy& enemy, const Neighbours& neighbours);
 	bool MoveP(Player& player, const Neighbours& neighbours);
 	bool MoveB(Bullet& bullet, const Neighbours& neighbours);
+};
+
+struct NodeMap
+{
+	int m_SizeX,
+		m_SizeY;
+	Node* m_pMap;
+
+	NodeMap();
+	NodeMap(const int sizeX, const int sizeY, Node* mapArray);
+	~NodeMap();
+
+	void UpdateNodeState(const int x, const int y, bool state);
+	Node GetNode(const int x, const int y);
+	Node GetNodeOnGridPos(GridPosition gridPos);
+	NodeNeighbours* GetNeighbours(const int x, const int y);
 };
 

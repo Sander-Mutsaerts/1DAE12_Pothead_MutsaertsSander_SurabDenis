@@ -1,8 +1,4 @@
-﻿  pch.cpp
-  Core.cpp
-  Game.cpp
-  main.cpp
-  structs.cpp
+﻿  structs.cpp
   utils.cpp
   Generating Code...
   GridGame.vcxproj -> C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Debug\GridGame.exe
