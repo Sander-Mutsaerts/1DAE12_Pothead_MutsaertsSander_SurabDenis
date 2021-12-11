@@ -490,7 +490,7 @@ Neighbours::~Neighbours()
 }
 
 GridPosition::GridPosition():
-	x(0), y(0)
+	x(9999), y(9999)
 {
 }
 
@@ -566,6 +566,9 @@ NodeList::~NodeList()
 */
 void NodeList::SwapElements(const int index1, const int index2)
 {
+	GridPosition temp{ m_pList[index1] };
+	m_pList[index1] = m_pList[index2];
+	m_pList[index2] = temp;
 }
 
 /*	
@@ -576,6 +579,26 @@ void NodeList::SwapElements(const int index1, const int index2)
 */
 void NodeList::ShiftRightFromIndex(const int startIndex)
 {
+	bool arrayFull{false};
+	if (m_NodeCount != m_Size)
+	{
+		arrayFull = true;
+	}
+	for (int i{ m_NodeCount - 1 }; i >= startIndex; i--)
+	{
+		if (!arrayFull)
+		{
+			m_pList[i + 1] = m_pList[i];
+		}
+		else
+		{
+			arrayFull = false;
+		}
+		if (i == startIndex)
+		{
+			m_pList[i] = GridPosition();
+		}
+	}
 }
 
 /*	
@@ -587,6 +610,18 @@ void NodeList::ShiftRightFromIndex(const int startIndex)
 */
 void NodeList::ShiftLeftFromIndex(const int startIndex)
 {
+	for (int i{ startIndex }; i < m_NodeCount - 1; i++)
+	{
+		m_pList[i] = m_pList[i + 1];
+	}
+	if (m_NodeCount == m_Size)
+	{
+		if (m_pList[m_NodeCount - 1].x != 9999)
+		{
+			m_pList[m_NodeCount - 1] = GridPosition();
+		}
+		
+	}
 }
 
 /*	
@@ -598,11 +633,30 @@ void NodeList::FillFromLeft()
 
 /*	
 	parameter:		- index		= The index at which the Node will be added.
+	requirements:	The list must not be full, if the list is full the Value at the index will just be overwritten.
 	Definition:		Adds a node to the list at the given index.
 */
 void NodeList::AddOnIndex(const int index)
 {
-	NodeList::m_pList[index];
+	if (m_NodeCount == m_Size)
+	{
+		std::cout << "Warning\t-->\tAdding a node to a full list resulted in overwritten data at index:" << index << "\n";
+	}
+	if (index == m_NodeCount)
+	{
+		m_pList[index];
+		IncNodeCount();
+	}
+	else if (index < m_NodeCount)
+	{
+		ShiftRightFromIndex(index);
+		m_pList[index];
+		IncNodeCount();
+	}
+	else if (index > m_NodeCount)
+	{
+		std::cerr << "Error:\t-->\tInserting into non-LeftFilled List.\n";
+	}
 }
 
 /*
@@ -610,11 +664,26 @@ void NodeList::AddOnIndex(const int index)
 	definition:		Deletes the node from the list at the given index.
 	result:			The node that was deleted.
 */
-Node NodeList::PopOnIndex(const int index)
+GridPosition NodeList::PopOnIndex(const int index)
 {
-	Node temp{ NodeList::m_pList[index] };
+	GridPosition temp{ m_pList[index] };
 	ShiftLeftFromIndex(index);
-	return Node{ temp };
+	return temp;
+}
+
+/*
+	Definition:		Increases the m_NodeCount member.
+*/
+void NodeList::IncNodeCount()
+{
+	if (m_NodeCount != m_Size)
+	{
+		m_NodeCount++;
+	}
+	else
+	{
+		std::cerr << "Error\t-->\tNodeCount exeeding size of the array.\n";
+	}
 }
 
 /*
@@ -622,14 +691,27 @@ Node NodeList::PopOnIndex(const int index)
 */
 void NodeList::Sort()
 {
+	bool change{ false };
+	for (int i{}; i < m_NodeCount ; i++)
+	{
+		if (m_pList[i].GlobalGoal > m_pList[i].GlobalGoal)
+		{
+			SwapElements(i, i++);
+			change = true;
+		}
+	}
+	if (change)
+	{
+		Sort();
+	}
 }
 
 Node::Node()
 	:m_pParent(nullptr),
 	m_Obstacle(false),
 	m_Visited(false),
-	m_GlobalGoal(9999.99f),
-	m_LocalGoal(9999.99f),
+	m_GlobalGoal(9999),
+	m_LocalGoal(9999),
 	m_GridPos(GridPosition())
 {
 }
@@ -638,8 +720,8 @@ Node::Node(bool obstacle, bool initialized, GridPosition gridPos)
 	:m_pParent(nullptr),
 	m_Obstacle(obstacle),
 	m_Visited(false),
-	m_GlobalGoal(9999.99f),
-	m_LocalGoal(9999.99f),
+	m_GlobalGoal(9999),
+	m_LocalGoal(9999),
 	m_GridPos(gridPos)
 {
 }

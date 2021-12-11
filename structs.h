@@ -102,6 +102,7 @@ struct GridPosition
 {
 	int x,
 		y;
+	int GlobalGoal = 9999;
 
 	GridPosition();
 	GridPosition(const int x, const int y);
@@ -124,8 +125,8 @@ struct Node
 	Node* m_pParent;
 	bool m_Obstacle,
 			m_Visited;
-	float m_GlobalGoal;
-	float m_LocalGoal;
+	int m_GlobalGoal;
+	int m_LocalGoal;
 	GridPosition m_GridPos;
 
 	Node();
@@ -157,7 +158,8 @@ struct NodeList
 	void ShiftLeftFromIndex(const int startIndex = 1);
 	void FillFromLeft();
 	void AddOnIndex(const int index);
-	Node PopOnIndex(const int index);
+	GridPosition PopOnIndex(const int index);
+	void IncNodeCount();
 	void Sort();
 };
 

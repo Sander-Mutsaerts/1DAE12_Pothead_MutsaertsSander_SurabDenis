@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Game.h"
-#include <iostream>
 #include <algorithm>
 
 //Basic game functions
@@ -25,8 +24,6 @@ void Draw()
 	DrawGrid();
 	DrawTextures();
 
-	//TEMP:
-	MapAllNodes();
 }
 
 void Update(float elapsedSec)
@@ -40,7 +37,7 @@ void Update(float elapsedSec)
 		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
 		if (pStates[SDL_SCANCODE_D])
 		{
-			std::cout << "\'d\' key is down\n";
+			//std::cout << "\'d\' key is down\n";
 			if (g_pPlayer->m_dir == DirectionState::right)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
@@ -64,7 +61,7 @@ void Update(float elapsedSec)
 		}
 		if (pStates[SDL_SCANCODE_A])
 		{
-			std::cout << "\'a\' keys is down\n";
+			//std::cout << "\'a\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::left)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
@@ -88,7 +85,7 @@ void Update(float elapsedSec)
 		}
 		if (pStates[SDL_SCANCODE_W])
 		{
-			std::cout << "\'w\' keys is down\n";
+			//std::cout << "\'w\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::up)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
@@ -112,7 +109,7 @@ void Update(float elapsedSec)
 		}
 		if (pStates[SDL_SCANCODE_S])
 		{
-			std::cout << "\'s\' keys is down\n";
+			//std::cout << "\'s\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::down)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
@@ -441,7 +438,7 @@ void InitializeEnemy()
 		{
 			std::cout << "Texture for enemy failed to load INDEX: " << iniSuccess[i] << '\n';
 		}
-		std::cout << "[" << g_EnemyTextures[i].width << ", " << g_EnemyTextures[i].height << "]\n";
+		//std::cout << "[" << g_EnemyTextures[i].width << ", " << g_EnemyTextures[i].height << "]\n";
 	}
 	g_pEnemyTexture = g_EnemyTextures;
 }
