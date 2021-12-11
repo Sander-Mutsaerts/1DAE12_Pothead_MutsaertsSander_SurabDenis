@@ -125,12 +125,12 @@ struct Node
 	Node* m_pParent;
 	bool m_Obstacle,
 			m_Visited;
-	int m_GlobalGoal;
+	float m_GlobalGoal;
 	int m_LocalGoal;
 	GridPosition m_GridPos;
 
 	Node();
-	Node(bool obstacle, bool initialized, GridPosition gridPos);
+	Node(bool obstacle, GridPosition gridPos);
 	~Node();
 };
 
@@ -157,9 +157,10 @@ struct NodeList
 	void ShiftRightFromIndex(const int startIndex = 0);
 	void ShiftLeftFromIndex(const int startIndex = 1);
 	void FillFromLeft();
-	void AddOnIndex(const int index);
+	void AddOnIndex(const int index, GridPosition pos);
 	GridPosition PopOnIndex(const int index);
 	void IncNodeCount();
+	void DecNodeCount();
 	void Sort();
 };
 
@@ -236,7 +237,7 @@ struct NodeMap
 
 	void UpdateNodeState(const int x, const int y, bool state);
 	Node GetNode(const int x, const int y);
-	Node GetNodeOnGridPos(GridPosition gridPos);
+	Node* GetNodeOnGridPos(GridPosition gridPos);
 	NodeNeighbours* GetNeighbours(const int x, const int y);
 };
 

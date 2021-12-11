@@ -20,10 +20,12 @@ const int g_GridScaler{2};
 int g_CellPixelSize{};
 int g_NrFrames{0};
 Matrix* g_pMatrix{ new Matrix{} };
+NodeMap* g_pNodeMap{ new NodeMap{} };
 
 Enemy* g_pEnemy{nullptr};
 Player* g_pPlayer{nullptr};
 Bullet* g_pBullet{nullptr};
+GridPosition* g_pCurrentNode{ new GridPosition{} };
 
 //Textures globals
 // g_AmountOfText represent the number of directions our objects can move around the grid basic is 4 later can work up to 8 (diagonal)
@@ -52,6 +54,12 @@ void InitializeBullet();
 void InitializeGrid();
 void DrawGrid();
 void DrawTextures();
+void UpdateNodes();
+float Heuristic(GridPosition pos, GridPosition endPos);
+bool AStar();
+GridPosition FindMoveEnemy(GridPosition currentPos);
+DirectionState FindMoveDir(GridPosition enemy, GridPosition move);
+
 
 #pragma endregion ownDeclarations
 

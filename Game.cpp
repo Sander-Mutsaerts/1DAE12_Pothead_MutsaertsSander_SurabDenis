@@ -32,6 +32,37 @@ void Update(float elapsedSec)
 
 	// e.g. Check keyboard state
 	g_NrFrames++;
+
+	if (g_pEnemy != nullptr)
+	{
+		Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+
+
+		AStar();
+
+		GridPosition move = FindMoveEnemy(g_pPlayer->m_GridPos);
+
+		g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);
+
+		bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+		delete n;
+		n = nullptr;
+
+		if (!moved)
+		{
+			if (g_pEnemy->dead)
+			{
+				// Delete enemies here.
+				delete g_pEnemy;
+				g_pEnemy = nullptr;
+			}
+		}
+		else
+		{
+			UpdateNodes();
+		}
+	}
+
 	if (!(g_NrFrames % 30) && g_pPlayer != nullptr)
 	{
 		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
@@ -43,6 +74,7 @@ void Update(float elapsedSec)
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				 bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
+				n = nullptr;
 
 				if (!moved)
 				{
@@ -67,6 +99,7 @@ void Update(float elapsedSec)
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
+				n = nullptr;
 
 				if (!moved)
 				{
@@ -91,6 +124,7 @@ void Update(float elapsedSec)
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
+				n = nullptr;
 
 				if (!moved)
 				{
@@ -115,6 +149,7 @@ void Update(float elapsedSec)
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
+				n = nullptr;
 
 				if (!moved)
 				{
@@ -131,23 +166,6 @@ void Update(float elapsedSec)
 				g_pPlayer->m_dir = DirectionState::down;
 			}
 		}
-
-		if (g_pEnemy != nullptr)
-		{
-			Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-			bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-			delete n;
-
-			if (!moved)
-			{
-				if (g_pEnemy->dead)
-				{
-					// Delete enemies here.
-					delete g_pEnemy;
-					g_pEnemy = nullptr;
-				}
-			}
-		}
 	}
 }
 
@@ -155,7 +173,13 @@ void End()
 {
 	// free game resources here
 	delete g_pMatrix;
+	g_pMatrix = nullptr;
 	delete g_pBullet;
+	g_pBullet = nullptr;
+	delete g_pNodeMap;
+	g_pNodeMap = nullptr;
+	delete g_pCurrentNode;
+	g_pCurrentNode = nullptr;
 }
 #pragma endregion gameFunctions
 
@@ -243,6 +267,7 @@ void InitializeMatrix()
 		<< " .\nPixel count per grid cell is " << g_CellPixelSize << "\n";
 
 	MatrixElement* pArray = new MatrixElement[arraySize];
+	Node* pMapArray = new Node[arraySize];
 	MatrixChar mapArray{ sizeX, sizeY,
 		new char[arraySize]{'i','p','p','p','p','p','i','i','i','i','i','i','i','i','p','p','p','p','i','i','i','i','i','i','i','i','i','i','i','i','i','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
@@ -255,8 +280,8 @@ void InitializeMatrix()
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','c','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','c','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','b','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
@@ -278,9 +303,11 @@ void InitializeMatrix()
 		Building the map using the mapArray and applying it's defined states 
 		to the world matrix according to the legend(line:112).
 		*/
+		bool obstacle{ false };
 		if (mapArray.m_pMatrix[i] == 'i')
 		{
 			pArray[i].m_WorldState = WorldState::impassable;
+			obstacle = true;
 		}
 		else if (mapArray.m_pMatrix[i] == 'p')
 		{
@@ -290,6 +317,8 @@ void InitializeMatrix()
 		{
 			pArray[i].m_WorldState = WorldState::zombie;
 			g_pEnemy = new Enemy{ gridPos, DirectionState::down};
+			//TEMP:
+			obstacle = true;
 		}
 		else if (mapArray.m_pMatrix[i] == 'c')
 		{
@@ -301,12 +330,152 @@ void InitializeMatrix()
 			pArray[i].m_WorldState = WorldState::danger;
 			g_pBullet = new Bullet{ gridPos, DirectionState::down };
 		}
+
+		const Node nodeToAdd{obstacle, gridPos};
+		pMapArray[i] = nodeToAdd;
+
 	}
 	//----------------------------------------------building the matrix-------------------------------------------------
+	g_pNodeMap->m_SizeX = sizeX;
+	g_pNodeMap->m_SizeY = sizeY;
+	g_pNodeMap->m_pMap = pMapArray;
 
 	g_pMatrix->m_SizeX = sizeX;
 	g_pMatrix->m_SizeY = sizeY;
 	g_pMatrix->m_pMatrix = pArray;
+}
+
+float Heuristic(GridPosition pos, GridPosition endPos)
+{
+	//return abs(pos.x - endPos.x) + abs(pos.y - endPos.y);
+	return sqrt(powf(float(pos.x) - float(endPos.x), 2.f) + powf(float(pos.y) - float(endPos.y), 2.f));
+}
+
+bool AStar()
+{
+	for (int i{}; i < g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY; i++)
+	{
+		g_pNodeMap->m_pMap[i].m_Visited = false;
+		g_pNodeMap->m_pMap[i].m_GlobalGoal = 9999;
+		g_pNodeMap->m_pMap[i].m_pParent = nullptr;
+	}
+
+	g_pCurrentNode = &g_pEnemy->m_GridPos;
+	g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_GlobalGoal = Heuristic(*g_pCurrentNode, g_pPlayer->m_GridPos);
+	g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal = 0;
+
+	GridPosition* pNodeArray{ new GridPosition[g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY]{} };
+	NodeList nodesToTest{ g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY, 0, pNodeArray};
+
+	nodesToTest.AddOnIndex(0, *g_pCurrentNode);
+
+	while (nodesToTest.m_NodeCount != 0 
+		&& g_pCurrentNode->x != g_pPlayer->m_GridPos.x 
+		&& g_pCurrentNode->y != g_pPlayer->m_GridPos.y)
+	{
+		nodesToTest.Sort();
+
+		while(nodesToTest.m_NodeCount != 0 
+			&& g_pNodeMap->GetNodeOnGridPos(nodesToTest.m_pList[0])->m_Visited)
+		{
+			nodesToTest.PopOnIndex(0);
+		}
+
+		if (nodesToTest.m_NodeCount == 0) break;
+
+		g_pCurrentNode = &nodesToTest.m_pList[0];
+		g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_Visited = true;
+
+		NodeNeighbours* neighboursArray = g_pNodeMap->GetNeighbours(g_pCurrentNode->x, g_pCurrentNode->y);
+		for (int i{}; i < neighboursArray->m_Count; i++)
+		{
+			if (!g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Visited
+				&& !g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Obstacle)
+			{
+				nodesToTest.AddOnIndex(0, g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_GridPos);
+			}
+
+			int possiblylowerGoal = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal + 1;
+
+			if (possiblylowerGoal < g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_LocalGoal)
+			{
+				g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_pParent = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode);
+
+				g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_LocalGoal = possiblylowerGoal;
+				
+				g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_GlobalGoal =
+					float(g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_LocalGoal)
+					+ Heuristic(neighboursArray->m_pNodes->m_GridPos, g_pPlayer->m_GridPos);
+			}
+		}
+	}
+	return true;
+}
+
+GridPosition FindMoveEnemy(GridPosition currentPos)
+{
+	if (g_pNodeMap->GetNodeOnGridPos(currentPos)->m_pParent != nullptr)
+	{
+		if (g_pNodeMap->GetNodeOnGridPos(currentPos)->m_pParent->m_pParent == nullptr)
+		{
+			return currentPos;
+		}
+		return FindMoveEnemy(g_pNodeMap->GetNodeOnGridPos(currentPos)->m_pParent->m_GridPos);
+	}
+	std::cerr << "Error\t-->\tshortest path is to short for determining next move";
+	return GridPosition{};
+
+}
+
+DirectionState FindMoveDir(GridPosition enemy, GridPosition move)
+{
+	if (enemy.x < move.x)
+	{
+		return DirectionState::right;
+	}
+	else if (enemy.x > move.x)
+	{
+		return DirectionState::left;
+	}
+	else if (enemy.y < move.y)
+	{
+		return DirectionState::down;
+	}
+	else
+	{
+		return DirectionState::up;
+	}
+}
+
+//TODO: check what happens if it is only generated for passable
+//TODO: Remove temp variable and use Getter functions.
+void UpdateNodes()
+{
+	const int    arraySize{ g_pMatrix->m_SizeX * g_pMatrix->m_SizeY };
+	for (int i{}; i < arraySize; i++)
+	{
+		const int x{ i % g_pMatrix->m_SizeX }, y{ i / g_pMatrix->m_SizeX };
+		Point2f origin{ g_pMatrix->GetElement(x, y).m_Position };
+
+		Node temp{ g_pNodeMap->GetNode(x, y) };
+
+		switch (g_pMatrix->GetElement(x, y).m_WorldState)
+		{
+		case WorldState::passable:
+			
+			temp.m_Obstacle = false;
+			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
+			break;
+		case WorldState::impassable:
+			temp.m_Obstacle = true;
+			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
+			break;
+		case WorldState::danger:
+			temp.m_Obstacle = false;
+			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
+			break;
+		}
+	}
 }
 
 void DrawGrid()

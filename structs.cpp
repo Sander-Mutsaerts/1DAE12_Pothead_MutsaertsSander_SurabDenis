@@ -584,19 +584,22 @@ void NodeList::ShiftRightFromIndex(const int startIndex)
 	{
 		arrayFull = true;
 	}
-	for (int i{ m_NodeCount - 1 }; i >= startIndex; i--)
+	if (m_pList[startIndex].x != 9999)
 	{
-		if (!arrayFull)
+		for (int i{ m_NodeCount - 1 }; i >= startIndex; i--)
 		{
-			m_pList[i + 1] = m_pList[i];
-		}
-		else
-		{
-			arrayFull = false;
-		}
-		if (i == startIndex)
-		{
-			m_pList[i] = GridPosition();
+			if (!arrayFull)
+			{
+				m_pList[i + 1] = m_pList[i];
+			}
+			else
+			{
+				arrayFull = false;
+			}
+			if (i == startIndex)
+			{
+				m_pList[i] = GridPosition();
+			}
 		}
 	}
 }
@@ -636,7 +639,7 @@ void NodeList::FillFromLeft()
 	requirements:	The list must not be full, if the list is full the Value at the index will just be overwritten.
 	Definition:		Adds a node to the list at the given index.
 */
-void NodeList::AddOnIndex(const int index)
+void NodeList::AddOnIndex(const int index, GridPosition pos)
 {
 	if (m_NodeCount == m_Size)
 	{
@@ -644,13 +647,13 @@ void NodeList::AddOnIndex(const int index)
 	}
 	if (index == m_NodeCount)
 	{
-		m_pList[index];
+		m_pList[index] = pos;
 		IncNodeCount();
 	}
 	else if (index < m_NodeCount)
 	{
 		ShiftRightFromIndex(index);
-		m_pList[index];
+		m_pList[index] = pos;
 		IncNodeCount();
 	}
 	else if (index > m_NodeCount)
@@ -682,7 +685,19 @@ void NodeList::IncNodeCount()
 	}
 	else
 	{
-		std::cerr << "Error\t-->\tNodeCount exeeding size of the array.\n";
+		std::cerr << "Error\t-->\tNodeCount exeeding upper bound of the array.\n";
+	}
+}
+
+void NodeList::DecNodeCount()
+{
+	if (m_NodeCount != 0)
+	{
+		m_NodeCount--;
+	}
+	else
+	{
+		std::cerr << "Error\t-->\tNodeCount exeeding lower bound of the array.\n";
 	}
 }
 
@@ -710,17 +725,17 @@ Node::Node()
 	:m_pParent(nullptr),
 	m_Obstacle(false),
 	m_Visited(false),
-	m_GlobalGoal(9999),
+	m_GlobalGoal(9999.99f),
 	m_LocalGoal(9999),
 	m_GridPos(GridPosition())
 {
 }
 
-Node::Node(bool obstacle, bool initialized, GridPosition gridPos)
+Node::Node(bool obstacle, GridPosition gridPos)
 	:m_pParent(nullptr),
 	m_Obstacle(obstacle),
 	m_Visited(false),
-	m_GlobalGoal(9999),
+	m_GlobalGoal(9999.99f),
 	m_LocalGoal(9999),
 	m_GridPos(gridPos)
 {
@@ -757,9 +772,10 @@ Node NodeMap::GetNode(const int x, const int y)
 	return m_pMap[index];
 }
 
-Node NodeMap::GetNodeOnGridPos(GridPosition gridPos)
+Node* NodeMap::GetNodeOnGridPos(GridPosition gridPos)
 {
-	return GetNode(gridPos.x, gridPos.y);
+	const int index{ int(m_SizeX) * gridPos.y + gridPos.x };
+	return &m_pMap[index];
 }
 
 NodeNeighbours* NodeMap::GetNeighbours(const int x, const int y)
@@ -852,7 +868,7 @@ NodeNeighbours* NodeMap::GetNeighbours(const int x, const int y)
 }
 
 NodeNeighbours::NodeNeighbours(const int arraySize, Node* nodes)
-	:m_Count(arraySize), m_pNodes()
+	:m_Count(arraySize), m_pNodes(nodes)
 {
 }
 
