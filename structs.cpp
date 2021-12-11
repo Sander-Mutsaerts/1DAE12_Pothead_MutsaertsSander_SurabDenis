@@ -550,8 +550,8 @@ NodeList::NodeList()
 {
 }
 
-NodeList::NodeList(const int size, const int nodeCount, Node* pNode)
-	:m_Size(size), m_NodeCount(nodeCount), m_pList(pNode)
+NodeList::NodeList(const int size, const int nodeCount, GridPosition* pPosArray)
+	:m_Size(size), m_NodeCount(nodeCount), m_pList(pPosArray)
 {
 }
 
@@ -581,7 +581,7 @@ void NodeList::ShiftRightFromIndex(const int startIndex)
 /*	
 	parameters:		- startIndex	= The index from which to start shifting elements to the right.
 	requirements:	The list needs to be filled up from the left to the right (no empty indexes) 
-					apart from the startingIndex.
+					apart from the startIndex.
 	definition:		The lists elements will each be shifted left one position starting from the element 
 					at the startIndex up to the last element that is not nullptr.
 */
@@ -625,5 +625,157 @@ void NodeList::Sort()
 }
 
 Node::Node()
+	:m_pParent(nullptr),
+	m_Obstacle(false),
+	m_Visited(false),
+	m_GlobalGoal(9999.99f),
+	m_LocalGoal(9999.99f),
+	m_GridPos(GridPosition())
 {
+}
+
+Node::Node(bool obstacle, bool initialized, GridPosition gridPos)
+	:m_pParent(nullptr),
+	m_Obstacle(obstacle),
+	m_Visited(false),
+	m_GlobalGoal(9999.99f),
+	m_LocalGoal(9999.99f),
+	m_GridPos(gridPos)
+{
+}
+
+Node::~Node()
+{
+}
+
+NodeMap::NodeMap()
+	:m_SizeX(1), m_SizeY(1), m_pMap(nullptr)
+{
+}
+
+NodeMap::NodeMap(const int sizeX, const int sizeY, Node* mapArray)
+	:m_SizeX(sizeX), m_SizeY(sizeY),m_pMap(mapArray)
+{
+}
+
+NodeMap::~NodeMap()
+{
+	delete[] m_pMap;
+	m_pMap = nullptr;
+}
+
+void NodeMap::UpdateNodeState(const int x, const int y, bool state)
+{
+	m_pMap[y * m_SizeX + x].m_Obstacle = state;
+}
+
+Node NodeMap::GetNode(const int x, const int y)
+{
+	const int index{ int(m_SizeX) * y + x };
+	return m_pMap[index];
+}
+
+Node NodeMap::GetNodeOnGridPos(GridPosition gridPos)
+{
+	return GetNode(gridPos.x, gridPos.y);
+}
+
+NodeNeighbours* NodeMap::GetNeighbours(const int x, const int y)
+{
+	if (x == 0)
+	{
+		if (y == 0)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x + 1, y),
+														GetNode(x, y + 1)} };
+		}
+		else if (y == m_SizeY)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x + 1, y),
+														GetNode(x, y - 1) } };
+		}
+		else
+		{
+			return new NodeNeighbours{ 2, new Node[3]{ GetNode(x, y - 1),
+														GetNode(x + 1, y),
+														GetNode(x, y + 1) } };
+		}
+	}
+	else if (x == m_SizeX)
+	{
+		if (y == 0)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x - 1, y),
+														GetNode(x, y + 1) } };
+		}
+		else if (y == m_SizeY)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x - 1, y),
+														GetNode(x, y - 1) } };
+		}
+		else
+		{
+			return new NodeNeighbours{ 2, new Node[3]{ GetNode(x, y - 1),
+														GetNode(x, y + 1),
+														GetNode(x - 1, y) } };
+		}
+	}
+	else if (y == 0)
+	{
+		if (x == 0)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x + 1, y),
+														GetNode(x, y + 1) } };
+		}
+		else if (x == m_SizeX)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x - 1, y),
+														GetNode(x, y + 1) } };
+		}
+		else
+		{
+			;
+			return new NodeNeighbours{ 3,  new Node[3]{ GetNode(x + 1, y),
+														GetNode(x, y + 1),
+														GetNode(x - 1, y) } };
+		}
+	}
+	else if (y == m_SizeY)
+	{
+		if (x == 0)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x + 1, y),
+														GetNode(x, y - 1) } };
+		}
+		else if (x == m_SizeX)
+		{
+			return new NodeNeighbours{ 2, new Node[2]{ GetNode(x - 1, y),
+														GetNode(x, y - 1) } };
+		}
+		else
+		{
+			return new NodeNeighbours{ 3, new Node[3]{ GetNode(x, y - 1),
+														GetNode(x + 1, y),
+														GetNode(x - 1, y) } };
+		}
+	}
+	else
+	{
+		return new NodeNeighbours{ 4, new Node[4]{ GetNode(x, y - 1),
+													GetNode(x + 1, y),
+													GetNode(x, y + 1),
+													GetNode(x - 1, y) } };
+	}
+
+}
+
+NodeNeighbours::NodeNeighbours(const int arraySize, Node* nodes)
+	:m_Count(arraySize), m_pNodes()
+{
+}
+
+NodeNeighbours::~NodeNeighbours()
+{
+	delete[] m_pNodes;
+	m_pNodes = nullptr;
 }
