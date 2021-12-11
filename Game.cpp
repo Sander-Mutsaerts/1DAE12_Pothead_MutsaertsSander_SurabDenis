@@ -272,7 +272,7 @@ void InitializeMatrix()
 		const Point2f pointToAdd{ float(x * g_CellPixelSize), g_WindowHeight - float((y + 1) * g_CellPixelSize) };
 		const GridPosition gridPos{ x, y };
 		pArray[i].m_Position = pointToAdd;
-		pArray[i].m_GridPosition = gridPos;
+		pArray[i].m_GridPos = gridPos;
 
 		/*
 		Building the map using the mapArray and applying it's defined states 
@@ -289,7 +289,7 @@ void InitializeMatrix()
 		else if (mapArray.m_pMatrix[i] == 'z')
 		{
 			pArray[i].m_WorldState = WorldState::zombie;
-			g_pEnemy = new Enemy{ gridPos, DirectionState::up};
+			g_pEnemy = new Enemy{ gridPos, DirectionState::down};
 		}
 		else if (mapArray.m_pMatrix[i] == 'c')
 		{

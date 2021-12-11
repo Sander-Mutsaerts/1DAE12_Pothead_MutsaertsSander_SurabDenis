@@ -1,29 +1,13 @@
-﻿  Game.cpp
+﻿  pch.cpp
+  Core.cpp
+  Game.cpp
   main.cpp
+  structs.cpp
   utils.cpp
   Generating Code...
   GridGame.vcxproj -> C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Debug\GridGame.exe
   COPY THE DLL FILES
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2-2.0.10\lib\x86\SDL2.dll
-  1 File(s) copied
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\libjpeg-9.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\libpng16-16.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\libtiff-5.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\libwebp-7.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\SDL2_image.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_image-2.0.5\lib\x86\zlib1.dll
-  6 File(s) copied
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libFLAC-8.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libmodplug-1.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libmpg123-0.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libogg-0.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libopus-0.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libopusfile-0.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libvorbis-0.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\libvorbisfile-3.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_mixer-2.0.4\lib\x86\SDL2_mixer.dll
-  9 File(s) copied
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_ttf-2.0.15\lib\x86\libfreetype-6.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_ttf-2.0.15\lib\x86\SDL2_ttf.dll
-  C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Libraries\SDL2_ttf-2.0.15\lib\x86\zlib1.dll
-  3 File(s) copied
+  0 File(s) copied
+  0 File(s) copied
+  0 File(s) copied
+  0 File(s) copied

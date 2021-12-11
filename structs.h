@@ -88,6 +88,8 @@ struct MatrixChar
 	~MatrixChar();
 };
 
+
+
 enum class WorldState {
 	danger, passable, impassable, breakable, zombie, player
 };
@@ -110,11 +112,47 @@ struct MatrixElement
 {
 	WorldState m_WorldState;
 	Point2f m_Position;
-	GridPosition m_GridPosition;
+	GridPosition m_GridPos;
 	
 	MatrixElement();
 	explicit MatrixElement(WorldState worldState, Point2f bottomLeft, GridPosition gridPos);
 	~MatrixElement();
+};
+
+struct Node
+{
+	Node* m_Parent;
+	bool m_Obstacle;
+	bool m_Visited;
+	float m_GlobalGoal;
+	float m_LocalGoal;
+	GridPosition m_GridPos;
+	Node* pNeighbours;
+
+	Node();
+	//Node();
+	~Node();
+
+	void SetNeighbours(MatrixElement* MatrixNeighbours);
+};
+
+struct NodeList
+{
+	int m_Size;
+	int m_NodeCount;
+	Node* m_pList;
+
+	NodeList();
+	NodeList(const int size, const int nodeCount, Node* pNode);
+	~NodeList();
+
+	void SwapElements(const int index1, const int index2);
+	void ShiftRightFromIndex(const int startIndex = 0);
+	void ShiftLeftFromIndex(const int startIndex = 1);
+	void FillFromLeft();
+	void AddOnIndex(const int index);
+	Node PopOnIndex(const int index);
+	void Sort();
 };
 
 struct Neighbours

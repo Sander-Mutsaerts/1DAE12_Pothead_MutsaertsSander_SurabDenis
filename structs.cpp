@@ -122,7 +122,7 @@ MatrixElement::MatrixElement()
 }
 
 MatrixElement::MatrixElement(WorldState worldState, Point2f bottomLeft, GridPosition gridPos)
-	: m_WorldState(worldState), m_Position(bottomLeft), m_GridPosition(gridPos)
+	: m_WorldState(worldState), m_Position(bottomLeft), m_GridPos(gridPos)
 {
 }
 
@@ -252,15 +252,15 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 	case DirectionState::up:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((enemy.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x) 
-				&& (enemy.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((enemy.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x) 
+				&& (enemy.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x, 
-									neighbours.m_pElements[i].m_GridPosition.y, WorldState::zombie);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x, 
+									neighbours.m_pElements[i].m_GridPos.y, WorldState::zombie);
 					enemy.m_GridPos.y--;
 
 					return true;
@@ -278,15 +278,15 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 	case DirectionState::right:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((enemy.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (enemy.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((enemy.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (enemy.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::zombie);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::zombie);
 					enemy.m_GridPos.x++;
 
 					return true;
@@ -304,15 +304,15 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 	case DirectionState::down:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((enemy.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (enemy.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((enemy.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x)
+				&& (enemy.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::zombie);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::zombie);
 					enemy.m_GridPos.y++;
 
 					return true;
@@ -330,15 +330,15 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 	case DirectionState::left:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((enemy.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (enemy.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((enemy.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (enemy.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::zombie);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::zombie);
 					enemy.m_GridPos.x--;
 
 					return true;
@@ -366,15 +366,15 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 	case DirectionState::up:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (player.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x)
+				&& (player.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::player);
 					player.m_GridPos.y--;
 
 					return true;
@@ -392,15 +392,15 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 	case DirectionState::right:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((player.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((player.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::player);
 					player.m_GridPos.x++;
 
 					return true;
@@ -418,15 +418,15 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 	case DirectionState::down:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (player.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((player.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x)
+				&& (player.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::player);
 					player.m_GridPos.y++;
 
 					return true;
@@ -444,15 +444,15 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 	case DirectionState::left:
 		for (int i{}; i < neighbours.m_Count; i++)
 		{
-			if ((player.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPosition.x)
-				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPosition.y))
+			if ((player.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (player.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
 			{
 				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
 					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
 				{
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPosition.x,
-						neighbours.m_pElements[i].m_GridPosition.y, WorldState::player);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::player);
 					player.m_GridPos.x--;
 
 					return true;
@@ -542,5 +542,84 @@ Bullet::Bullet(GridPosition gridPos, DirectionState dir)
 }
 
 Bullet::~Bullet()
+{
+}
+
+NodeList::NodeList()
+	:m_Size(0), m_NodeCount(0), m_pList(nullptr)
+{
+}
+
+NodeList::NodeList(const int size, const int nodeCount, Node* pNode)
+{
+}
+
+NodeList::~NodeList()
+{
+}
+
+/*	
+	parameters:		- index1	= The index of the first element of the pair that needs to be swapped.
+					- index2	= The index of the second element of the pair that needs to be swapped.
+	definition:		The element of the list at index1 is swapped with the element of the list at index2.
+*/
+void NodeList::SwapElements(const int index1, const int index2)
+{
+}
+
+/*	
+	parameters:		- startIndex	= The index from which to start shifting elements to the right.
+	requirements:	The list needs to be filled up from left to right (no empty indexes).
+	definition:		The lists elements will each be shifted right one position starting from the last element
+					up to the element at the startIndex.
+*/
+void NodeList::ShiftRightFromIndex(const int startIndex)
+{
+}
+
+/*	
+	parameters:		- startIndex	= The index from which to start shifting elements to the right.
+	requirements:	The list needs to be filled up from the left to the right (no empty indexes) 
+					apart from the startingIndex.
+	definition:		The lists elements will each be shifted left one position starting from the element 
+					at the startIndex up to the last element that is not nullptr.
+*/
+void NodeList::ShiftLeftFromIndex(const int startIndex)
+{
+}
+
+/*	
+	definition:		Fills the list from left to right leaving no empty indexes.
+*/
+void NodeList::FillFromLeft()
+{
+}
+
+/*	
+	parameter:		- index		= The index at which the Node will be added.
+	Definition:		Adds a node to the list at the given index.
+*/
+void NodeList::AddOnIndex(const int index)
+{
+}
+
+/*
+	parameters:		- index		= The index at which the Node will deleted.
+	definition:		Deletes the node from the list at the given index.
+	result:			The node that was deleted.
+*/
+Node NodeList::PopOnIndex(const int index)
+{
+	return Node{};
+}
+
+/*
+	definition:		Sorts the nodes in the list from left to right with increasing m_globalGoals.
+*/
+void NodeList::Sort()
+{
+}
+
+Node::Node()
 {
 }
