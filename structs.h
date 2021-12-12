@@ -201,6 +201,7 @@ struct Bullet
 {
 	GridPosition m_GridPos;
 	DirectionState m_dir;
+	bool dead{ false };
 
 	Bullet();
 	Bullet(GridPosition gridPos, DirectionState dir);

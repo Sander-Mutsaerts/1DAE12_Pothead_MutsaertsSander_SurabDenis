@@ -270,6 +270,24 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				{
 					enemy.dead = true;
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -296,6 +314,24 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				{
 					enemy.dead = true;
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -322,6 +358,24 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				{
 					enemy.dead = true;
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -348,6 +402,24 @@ bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 				{
 					enemy.dead = true;
 					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					enemy.dead = true;
+					UpdateCellState(enemy.m_GridPos.x, enemy.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -384,6 +456,24 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -410,6 +500,24 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -436,6 +544,24 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -462,6 +588,24 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the bullet corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					player.dead = true;
+					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
 					return false;
 				}
 			}
@@ -477,7 +621,164 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 //TODO: 
 bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 {
-	return false;
+	switch (bullet.m_dir)
+	{
+	case DirectionState::up:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((bullet.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x)
+				&& (bullet.m_GridPos.y - 1 == neighbours.m_pElements[i].m_GridPos.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::danger);
+					bullet.m_GridPos.y--;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::right:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((bullet.m_GridPos.x + 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (bullet.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::danger);
+					bullet.m_GridPos.x++;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::down:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((bullet.m_GridPos.x == neighbours.m_pElements[i].m_GridPos.x)
+				&& (bullet.m_GridPos.y + 1 == neighbours.m_pElements[i].m_GridPos.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::danger);
+					bullet.m_GridPos.y++;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	case DirectionState::left:
+		for (int i{}; i < neighbours.m_Count; i++)
+		{
+			if ((bullet.m_GridPos.x - 1 == neighbours.m_pElements[i].m_GridPos.x)
+				&& (bullet.m_GridPos.y == neighbours.m_pElements[i].m_GridPos.y))
+			{
+				if (neighbours.m_pElements[i].m_WorldState == WorldState::passable
+					|| neighbours.m_pElements[i].m_WorldState == WorldState::breakable)
+				{
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::danger);
+					bullet.m_GridPos.x--;
+
+					return true;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::zombie)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					return false;
+				}
+			}
+		}
+		return false;
+		break;
+	default:
+		return false;
+		break;
+	}
 }
 
 Neighbours::Neighbours(const int arraySize, MatrixElement* elements)

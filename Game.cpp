@@ -33,38 +33,40 @@ void Update(float elapsedSec)
 	// e.g. Check keyboard state
 	g_NrFrames++;
 
-	if (g_pEnemy != nullptr)
-	{
-		Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-
-
-		AStar();
-
-		GridPosition move = FindMoveEnemy(g_pPlayer->m_GridPos);
-
-		g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);
-
-		bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-		delete n;
-		n = nullptr;
-
-		if (!moved)
-		{
-			if (g_pEnemy->dead)
-			{
-				// Delete enemies here.
-				delete g_pEnemy;
-				g_pEnemy = nullptr;
-			}
-		}
-		else
-		{
-			UpdateNodes();
-		}
-	}
+	
 
 	if (!(g_NrFrames % 30) && g_pPlayer != nullptr)
 	{
+		if (g_pEnemy != nullptr)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+
+
+				/*AStar();
+
+				GridPosition move = FindMoveEnemy(g_pPlayer->m_GridPos);
+
+				g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);*/
+
+				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				delete n;
+				n = nullptr;
+
+				if (!moved)
+				{
+					if (g_pEnemy->dead)
+					{
+						// Delete enemies here.
+						delete g_pEnemy;
+						g_pEnemy = nullptr;
+					}
+				}
+				else
+				{
+					UpdateNodes();
+				}
+			}
+
 		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
 		if (pStates[SDL_SCANCODE_D])
 		{
