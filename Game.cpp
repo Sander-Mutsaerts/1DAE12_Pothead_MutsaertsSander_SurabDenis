@@ -353,6 +353,7 @@ float Heuristic(GridPosition pos, GridPosition endPos)
 
 bool AStar()
 {
+	g_AStrIteration++;
 	for (int i{}; i < g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY; i++)
 	{
 		g_pNodeMap->m_pMap[i].m_Visited = false;
@@ -362,18 +363,27 @@ bool AStar()
 
 	g_pCurrentNode = &g_pEnemy->m_GridPos;
 	g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_GlobalGoal = Heuristic(*g_pCurrentNode, g_pPlayer->m_GridPos);
-	g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal = 0;
+	g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal = 0; //TODO: either this doesn't work or for currentNode reassignment we get the wrong one.
+	
 
 	GridPosition* pNodeArray{ new GridPosition[g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY]{} };
 	NodeList nodesToTest{ g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY, 0, pNodeArray};
 
 	nodesToTest.AddOnIndex(0, *g_pCurrentNode);
+	bool b1 = nodesToTest.m_NodeCount != 0;
+	bool b2 = g_pCurrentNode->x != g_pPlayer->m_GridPos.x;
+	bool b3 = g_pCurrentNode->y != g_pPlayer->m_GridPos.y;
+	std::cout << "yes";
 
 	while (nodesToTest.m_NodeCount != 0 
-		&& g_pCurrentNode->x != g_pPlayer->m_GridPos.x 
-		&& g_pCurrentNode->y != g_pPlayer->m_GridPos.y)
+		|| (g_pCurrentNode->x != g_pPlayer->m_GridPos.x 
+		&& g_pCurrentNode->y != g_pPlayer->m_GridPos.y))
 	{
+		GridPosition FirstNodeLocalGoal = g_pNodeMap->GetNodeOnGridPos(nodesToTest.m_pList[0])->m_GridPos;
+		GridPosition CurrentNodeLocalGoal = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_GridPos;
+		std::cout << "yes";
 		nodesToTest.Sort();
+		
 
 		while(nodesToTest.m_NodeCount != 0 
 			&& g_pNodeMap->GetNodeOnGridPos(nodesToTest.m_pList[0])->m_Visited)
@@ -385,18 +395,35 @@ bool AStar()
 
 		g_pCurrentNode = &nodesToTest.m_pList[0];
 		g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_Visited = true;
+		std::cout << "yes";
 
 		NodeNeighbours* neighboursArray = g_pNodeMap->GetNeighbours(g_pCurrentNode->x, g_pCurrentNode->y);
+		Node test0 = neighboursArray->m_pNodes[2];
+		std::cout << "yes";
+		if (g_AStrIteration == 1)
+		{
+
+			std::cout << "yes";
+		}
 		for (int i{}; i < neighboursArray->m_Count; i++)
 		{
+
+			int FirstNodeLocalGoal = g_pNodeMap->GetNodeOnGridPos(nodesToTest.m_pList[0])->m_LocalGoal;
+			int CurrentNodeLocalGoal = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal;
+			GridPosition test1 = neighboursArray->m_pNodes[i].m_GridPos;
+			bool  test2 = g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Obstacle;
+			std::cout << "yes";
 			if (!g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Visited
-				&& !g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Obstacle)
+				|| !g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_Obstacle)
 			{
 				nodesToTest.AddOnIndex(0, g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_GridPos);
 			}
 
+			int FirstNodeLocalGoal0 = g_pNodeMap->GetNodeOnGridPos(nodesToTest.m_pList[1])->m_LocalGoal;
+			int CurrentNodeLocalGoal0 = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal;
 			int possiblylowerGoal = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode)->m_LocalGoal + 1;
-
+			int neighbourLocalGoal = g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_LocalGoal;
+			std::cout << "no";
 			if (possiblylowerGoal < g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_LocalGoal)
 			{
 				g_pNodeMap->GetNodeOnGridPos(neighboursArray->m_pNodes[i].m_GridPos)->m_pParent = g_pNodeMap->GetNodeOnGridPos(*g_pCurrentNode);
@@ -471,6 +498,10 @@ void UpdateNodes()
 			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
 			break;
 		case WorldState::danger:
+			temp.m_Obstacle = false;
+			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
+			break;
+		case WorldState::player:
 			temp.m_Obstacle = false;
 			g_pNodeMap->m_pMap[y * g_pNodeMap->m_SizeX + x] = temp;
 			break;

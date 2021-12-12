@@ -13,7 +13,7 @@ float g_WindowHeight{ 720 };
 
 #pragma region ownDeclarations
 // Declare your own global variables here
-
+int g_AStrIteration{};
 /*	- g_GridScaler =	Default must be one, will use GCD of the resolution to get a standard grid
 */
 const int g_GridScaler{2};

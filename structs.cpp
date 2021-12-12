@@ -245,6 +245,7 @@ void Matrix::UpdateCellState(const int x, const int y, WorldState state)
 	m_pMatrix[y * m_SizeX + x].m_WorldState = state;
 }
 
+// TODO: Zombie kills bullet. maybe player to.
 bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 {
 	switch (enemy.m_dir)
@@ -473,6 +474,7 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 	}
 }
 
+//TODO: 
 bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 {
 	return false;
@@ -580,7 +582,7 @@ void NodeList::SwapElements(const int index1, const int index2)
 void NodeList::ShiftRightFromIndex(const int startIndex)
 {
 	bool arrayFull{false};
-	if (m_NodeCount != m_Size)
+	if (m_NodeCount == m_Size)
 	{
 		arrayFull = true;
 	}
@@ -591,6 +593,12 @@ void NodeList::ShiftRightFromIndex(const int startIndex)
 			if (!arrayFull)
 			{
 				m_pList[i + 1] = m_pList[i];
+				if (i + 1 == startIndex + 1)
+				{
+					int x = m_pList[i+1].x;
+					int y = m_pList[i+1].y;
+					std::cout << "jeb";
+				}
 			}
 			else
 			{
