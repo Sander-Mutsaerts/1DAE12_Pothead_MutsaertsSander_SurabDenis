@@ -245,7 +245,6 @@ void Matrix::UpdateCellState(const int x, const int y, WorldState state)
 	m_pMatrix[y * m_SizeX + x].m_WorldState = state;
 }
 
-// TODO: Zombie kills bullet. maybe player to.
 bool Matrix::MoveE(Enemy& enemy, const Neighbours& neighbours)
 {
 	switch (enemy.m_dir)
@@ -468,12 +467,6 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
-						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
-
-					// Update the "dead" boolean of the enemy corresponding to that gridPos:
-
-
 					return false;
 				}
 			}
@@ -512,12 +505,6 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
-						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
-
-					// Update the "dead" boolean of the enemy corresponding to that gridPos:
-
-
 					return false;
 				}
 			}
@@ -556,12 +543,6 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
-						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
-
-					// Update the "dead" boolean of the enemy corresponding to that gridPos:
-
-
 					return false;
 				}
 			}
@@ -600,12 +581,6 @@ bool Matrix::MoveP(Player& player, const Neighbours& neighbours)
 				{
 					player.dead = true;
 					UpdateCellState(player.m_GridPos.x, player.m_GridPos.y, WorldState::passable);
-					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
-						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
-
-					// Update the "dead" boolean of the enemy corresponding to that gridPos:
-
-
 					return false;
 				}
 			}
@@ -651,6 +626,18 @@ bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 
 					return false;
 				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
+					return false;
+				}
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
 				{
 					bullet.dead = true;
@@ -685,6 +672,18 @@ bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
 
 					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
 
 
 					return false;
@@ -727,6 +726,18 @@ bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 
 					return false;
 				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
+
+
+					return false;
+				}
 				else if (neighbours.m_pElements[i].m_WorldState == WorldState::impassable)
 				{
 					bullet.dead = true;
@@ -761,6 +772,18 @@ bool Matrix::MoveB(Bullet& bullet, const Neighbours& neighbours)
 						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
 
 					// Update the "dead" boolean of the enemy corresponding to that gridPos:
+
+
+					return false;
+				}
+				else if (neighbours.m_pElements[i].m_WorldState == WorldState::player)
+				{
+					bullet.dead = true;
+					UpdateCellState(bullet.m_GridPos.x, bullet.m_GridPos.y, WorldState::passable);
+					UpdateCellState(neighbours.m_pElements[i].m_GridPos.x,
+						neighbours.m_pElements[i].m_GridPos.y, WorldState::passable);
+
+					// Update the "dead" boolean of the player corresponding to that gridPos:
 
 
 					return false;
