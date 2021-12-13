@@ -334,6 +334,26 @@ void InitializeMatrix()
 							'i','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','i','p','p','p','i','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','c','i',
 							'i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i'} };
+
+	//'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+	//	'i', 'z', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'i', 'i', 'i', 'p', 'p', 'i', 'i', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'i', 'p', 'p', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'i', 'i', 'i', 'p', 'p', 'i', 'i', 'i', 'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'i', 'i', 'i',
+	//	'i', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'c', 'i',
+	//	'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+
 	//------------------------------------------Initializing matrix cells----------------------------------------------
 	for (int i{}; i < arraySize; i++)
 	{
@@ -669,7 +689,7 @@ void DrawTimer()
 	//sourceRectangle.bottom = 0;
 	//sourceRectangle.width = g_TimerText.width/2.f;
 	//sourceRectangle.height = g_TimerText.height;
-	DrawTexture(g_TimerText, destinationRectangle);
+	//DrawTexture(g_TimerText, destinationRectangle);
 }
 //TODO: Somehow try to change the messy was of inicializing if possible
 void InitializePlayer()
@@ -767,7 +787,7 @@ void InitializeTrap()
 void InitializeBackgroundMusic()
 {
 	//you can switch songs by chaanging the digit from 1- 4
-	const char* song{ "Resources/Sounds/bc_music1.mp3" };
+	const char* song{ "Resources/Sounds/bc_music3.mp3" };
 
 	int audioHertz{ 22050 }; //default is 22050
 	Uint16 audioFormat{ AUDIO_S16SYS };
@@ -777,7 +797,7 @@ void InitializeBackgroundMusic()
 	{
 		std::cout << "Rip audio\n";
 	}
-	Mix_Volume(0, MIX_MAX_VOLUME / 20);
+	//Mix_Volume(0, MIX_MAX_VOLUME);
 	Mix_PlayChannel(-1, Mix_LoadWAV(song), 0);
 }
 
