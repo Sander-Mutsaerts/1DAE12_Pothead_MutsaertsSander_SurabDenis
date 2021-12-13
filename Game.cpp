@@ -14,6 +14,7 @@ void Start()
 	InitializeGun();
 	InitializeBullet();
 	InitBackgroundMusic();
+	InitTimer();
 }
 
 void Draw()
@@ -24,7 +25,7 @@ void Draw()
 	SetColor(1.f, 0.f, 0.f);
 	DrawGrid();
 	DrawTextures();
-
+	DrawTimer();
 }
 
 void Update(float elapsedSec)
@@ -33,108 +34,111 @@ void Update(float elapsedSec)
 
 	// e.g. Check keyboard state
 	g_NrFrames++;
+	UpdateTimer(elapsedSec);
 
-	
 
-	if (!(g_NrFrames % 30) && g_pPlayer != nullptr)
+	if (!(g_NrFrames % devisorSpeedE) && g_pEnemy != nullptr)
 	{
-		if (g_pEnemy != nullptr)
+		const Uint8* pStatesE = SDL_GetKeyboardState(nullptr);
+
+		if (pStatesE[SDL_SCANCODE_RIGHT])
+		{
+			//std::cout << "\'rightarrow\' key is down\n";
+			if (g_pEnemy->m_dir == DirectionState::right)
 			{
-			const Uint8* pStatesE = SDL_GetKeyboardState(nullptr);
-
-			if (pStatesE[SDL_SCANCODE_RIGHT])
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				delete n;
+				n = nullptr;
+				KillEnemy(moved);
+			}
+			else
 			{
-				//std::cout << "\'rightarrow\' key is down\n";
-				if (g_pEnemy->m_dir == DirectionState::right)
-				{
-					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-					delete n;
-					n = nullptr;
-					KillEnemy(moved);
-				}
-				else
-				{
-					g_pEnemy->m_dir = DirectionState::right;
-				}
+				g_pEnemy->m_dir = DirectionState::right;
 			}
-			if (pStatesE[SDL_SCANCODE_LEFT])
+		}
+		if (pStatesE[SDL_SCANCODE_LEFT])
+		{
+			//std::cout << "\'leftarrow\' keys is down\n";
+			if (g_pEnemy->m_dir == DirectionState::left)
 			{
-				//std::cout << "\'leftarrow\' keys is down\n";
-				if (g_pEnemy->m_dir == DirectionState::left)
-				{
-					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-					delete n;
-					n = nullptr;
-					KillEnemy(moved);
-				}
-				else
-				{
-					g_pEnemy->m_dir = DirectionState::left;
-				}
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				delete n;
+				n = nullptr;
+				KillEnemy(moved);
 			}
-			if (pStatesE[SDL_SCANCODE_UP])
+			else
 			{
-				//std::cout << "\'uparrow\' keys is down\n";
-				if (g_pEnemy->m_dir == DirectionState::up)
-				{
-					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-					delete n;
-					n = nullptr;
-					KillEnemy(moved);
-				}
-				else
-				{
-					g_pEnemy->m_dir = DirectionState::up;
-				}
+				g_pEnemy->m_dir = DirectionState::left;
 			}
-			if (pStatesE[SDL_SCANCODE_DOWN])
+		}
+		if (pStatesE[SDL_SCANCODE_UP])
+		{
+			//std::cout << "\'uparrow\' keys is down\n";
+			if (g_pEnemy->m_dir == DirectionState::up)
 			{
-				//std::cout << "\'downarrow\' keys is down\n";
-				if (g_pEnemy->m_dir == DirectionState::down)
-				{
-					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-					delete n;
-					n = nullptr;
-
-					KillEnemy(moved);
-				}
-				else
-				{
-					g_pEnemy->m_dir = DirectionState::down;
-				}
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				delete n;
+				n = nullptr;
+				KillEnemy(moved);
 			}
-				//Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
-
-
-				/*AStar();
-
-				GridPosition move = FindMoveEnemy(g_pPlayer->m_GridPos);
-
-				g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);*/
-
-				//bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-				//delete n;
-				//n = nullptr;
-
-				//if (!moved)
-				//{
-				//	if (g_pEnemy->dead)
-				//	{
-				//		// Delete enemies here.
-				//		delete g_pEnemy;
-				//		g_pEnemy = nullptr;
-				//	}
-				//}
-				//else
-				//{
-				//	UpdateNodes();
-				//}
+			else
+			{
+				g_pEnemy->m_dir = DirectionState::up;
 			}
+		}
+		if (pStatesE[SDL_SCANCODE_DOWN])
+		{
+			//std::cout << "\'downarrow\' keys is down\n";
+			if (g_pEnemy->m_dir == DirectionState::down)
+			{
+				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				delete n;
+				n = nullptr;
 
+				KillEnemy(moved);
+			}
+			else
+			{
+				g_pEnemy->m_dir = DirectionState::down;
+			}
+		}
+	}
+	else
+	{
+		g_DidZombieCaughtUpToThePlayer = true;
+	}
+	//Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+
+
+	/*AStar();
+
+	GridPosition move = FindMoveEnemy(g_pPlayer->m_GridPos);
+
+	g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);*/
+
+	//bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+	//delete n;
+	//n = nullptr;
+
+	//if (!moved)
+	//{
+	//	if (g_pEnemy->dead)
+	//	{
+	//		// Delete enemies here.
+	//		delete g_pEnemy;
+	//		g_pEnemy = nullptr;
+	//	}
+	//}
+	//else
+	//{
+	//	UpdateNodes();
+	//}
+if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
+{
 		const Uint8* pStatesP = SDL_GetKeyboardState(nullptr);
 		if (pStatesP[SDL_SCANCODE_D])
 		{
@@ -142,7 +146,7 @@ void Update(float elapsedSec)
 			if (g_pPlayer->m_dir == DirectionState::right)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
-				 bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
+				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 				n = nullptr;
 				KillPlayer(moved);
@@ -201,6 +205,11 @@ void Update(float elapsedSec)
 			}
 		}
 	}
+
+else
+{
+	g_DidZombieCaughtUpToThePlayer = true;
+}
 }
 
 void End()
@@ -387,7 +396,7 @@ float Heuristic(GridPosition pos, GridPosition endPos)
 
 bool AStar()
 {
-	g_AStrIteration++;
+	//g_AStrIteration++;
 	for (int i{}; i < g_pNodeMap->m_SizeX * g_pNodeMap->m_SizeY; i++)
 	{
 		g_pNodeMap->m_pMap[i].m_Visited = false;
@@ -434,11 +443,11 @@ bool AStar()
 		NodeNeighbours* neighboursArray = g_pNodeMap->GetNeighbours(g_pCurrentNode->x, g_pCurrentNode->y);
 		Node test0 = neighboursArray->m_pNodes[2];
 		std::cout << "yes";
-		if (g_AStrIteration == 1)
-		{
+		//if (g_AStrIteration == 1)
+		//{
 
-			std::cout << "yes";
-		}
+		//	std::cout << "yes";
+		//}
 		for (int i{}; i < neighboursArray->m_Count; i++)
 		{
 
@@ -639,6 +648,22 @@ void DrawTextures()
 		}
 	}
 }
+
+void DrawTimer()
+{
+	Point2f pos{g_WindowWidth/ 2.f - (g_TimerText.width / 2.f), g_WindowHeight - (g_TimerText.height)};
+	Rectf destinationRectangle{};
+	destinationRectangle.bottom = pos.y;
+	destinationRectangle.left = pos.x;
+	destinationRectangle.width = g_TimerText.width;
+	destinationRectangle.height = g_TimerText.height;
+	//Rectf sourceRectangle{};
+	//sourceRectangle.left = 0;
+	//sourceRectangle.bottom = 0;
+	//sourceRectangle.width = g_TimerText.width/2.f;
+	//sourceRectangle.height = g_TimerText.height;
+	DrawTexture(g_TimerText, destinationRectangle);
+}
 //TODO: Somehow try to change the messy was of inicializing if possible
 void InitializePlayer()
 {
@@ -768,6 +793,27 @@ void KillPlayer(bool moved)
 			delete g_pPlayer;
 			g_pPlayer = nullptr;
 		}
+	}
+}
+void InitTimer()
+{
+	if (!TextureFromString("Hi Boomer", "Resources/Fonts/RobotoMono-Medium.ttf", g_TimerFontSize, g_TimerColour, g_TimerText)) std::cout << "Image not found DIN-Light.otf\n";
+}
+
+void UpdateTimer(float elapsedTime)
+{
+	int amountOfFrames{ 60 };
+	if (g_Timer >= 0)
+	{
+		if (g_NrFrames % amountOfFrames == 0)
+		{
+			std::cout << "Time left: " << g_Timer << '\n';
+			g_Timer--;
+		}
+	}
+	else
+	{
+		g_DidTheTimeRunOut = true;
 	}
 }
 

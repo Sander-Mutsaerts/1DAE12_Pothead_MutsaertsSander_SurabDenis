@@ -13,14 +13,22 @@ float g_WindowHeight{ 720 };
 
 #pragma region ownDeclarations
 // Declare your own global variables here
-int g_AStrIteration{};
 /*	- g_GridScaler =	Default must be one, will use GCD of the resolution to get a standard grid
 */
 const int g_GridScaler{2};
 int g_CellPixelSize{};
-int g_NrFrames{0};
+int g_NrFrames{};
+int devisorSpeedP{30};
+int devisorSpeedE{40};// the bigger the slower the game goes
+bool g_DidZombieCaughtUpToThePlayer{ false };
+bool g_DidTheTimeRunOut{ false };
 Matrix* g_pMatrix{ new Matrix{} };
 NodeMap* g_pNodeMap{ new NodeMap{} };
+Texture g_TimerText{};
+const Color4f g_TimerColour{1,1,1,1};
+const int g_TimerFontSize{48};
+int g_Timer{60};
+void UpdateTimer(float elapsedTime);
 
 Enemy* g_pEnemy{nullptr};
 Player* g_pPlayer{nullptr};
@@ -53,8 +61,10 @@ void InitializeGun();
 void InitializeBullet();
 void InitializeGrid();
 void InitBackgroundMusic();
+void InitTimer();
 void DrawGrid();
 void DrawTextures();
+void DrawTimer();
 void UpdateNodes();
 float Heuristic(GridPosition pos, GridPosition endPos);
 bool AStar();
