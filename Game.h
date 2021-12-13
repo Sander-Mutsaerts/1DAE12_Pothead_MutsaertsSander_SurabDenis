@@ -52,6 +52,7 @@ void InitializeEnemy();
 void InitializeGun();
 void InitializeBullet();
 void InitializeGrid();
+void InitBackgroundMusic();
 void DrawGrid();
 void DrawTextures();
 void UpdateNodes();
@@ -59,6 +60,8 @@ float Heuristic(GridPosition pos, GridPosition endPos);
 bool AStar();
 GridPosition FindMoveEnemy(GridPosition currentPos);
 DirectionState FindMoveDir(GridPosition enemy, GridPosition move);
+void KillEnemy(bool moved);
+void KillPlayer(bool moved);
 
 
 #pragma endregion ownDeclarations

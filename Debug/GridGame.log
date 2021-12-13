@@ -1,11 +1,5 @@
-﻿  pch.cpp
-  Core.cpp
-  Game.cpp
-  main.cpp
-  structs.cpp
-  utils.cpp
-  Generating Code...
-  GridGame.vcxproj -> C:\Users\sande\Documents\Howest\year 1\Programming 1\week09\Pothead\Debug\GridGame.exe
+﻿  Game.cpp
+  GridGame.vcxproj -> C:\Users\Dendo\source\repos\1DAE12_Pothead_MutsaertsSander_SurabDenis\Debug\GridGame.exe
   COPY THE DLL FILES
   0 File(s) copied
   0 File(s) copied

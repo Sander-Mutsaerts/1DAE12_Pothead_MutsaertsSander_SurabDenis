@@ -13,6 +13,7 @@ void Start()
 	InitializeGrid();
 	InitializeGun();
 	InitializeBullet();
+	InitBackgroundMusic();
 }
 
 void Draw()
@@ -39,7 +40,74 @@ void Update(float elapsedSec)
 	{
 		if (g_pEnemy != nullptr)
 			{
-				Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+			const Uint8* pStatesE = SDL_GetKeyboardState(nullptr);
+
+			if (pStatesE[SDL_SCANCODE_RIGHT])
+			{
+				//std::cout << "\'rightarrow\' key is down\n";
+				if (g_pEnemy->m_dir == DirectionState::right)
+				{
+					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+					delete n;
+					n = nullptr;
+					KillEnemy(moved);
+				}
+				else
+				{
+					g_pEnemy->m_dir = DirectionState::right;
+				}
+			}
+			if (pStatesE[SDL_SCANCODE_LEFT])
+			{
+				//std::cout << "\'leftarrow\' keys is down\n";
+				if (g_pEnemy->m_dir == DirectionState::left)
+				{
+					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+					delete n;
+					n = nullptr;
+					KillEnemy(moved);
+				}
+				else
+				{
+					g_pEnemy->m_dir = DirectionState::left;
+				}
+			}
+			if (pStatesE[SDL_SCANCODE_UP])
+			{
+				//std::cout << "\'uparrow\' keys is down\n";
+				if (g_pEnemy->m_dir == DirectionState::up)
+				{
+					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+					delete n;
+					n = nullptr;
+					KillEnemy(moved);
+				}
+				else
+				{
+					g_pEnemy->m_dir = DirectionState::up;
+				}
+			}
+			if (pStatesE[SDL_SCANCODE_DOWN])
+			{
+				//std::cout << "\'downarrow\' keys is down\n";
+				if (g_pEnemy->m_dir == DirectionState::down)
+				{
+					Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
+					bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+					delete n;
+					n = nullptr;
+
+					KillEnemy(moved);
+				}
+				else
+				{
+					g_pEnemy->m_dir = DirectionState::down;
+				}
+			}
+				//Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
 
 
 				/*AStar();
@@ -48,27 +116,27 @@ void Update(float elapsedSec)
 
 				g_pEnemy->m_dir = FindMoveDir(g_pEnemy->m_GridPos, move);*/
 
-				bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
-				delete n;
-				n = nullptr;
+				//bool moved = g_pMatrix->MoveE(*g_pEnemy, *n);
+				//delete n;
+				//n = nullptr;
 
-				if (!moved)
-				{
-					if (g_pEnemy->dead)
-					{
-						// Delete enemies here.
-						delete g_pEnemy;
-						g_pEnemy = nullptr;
-					}
-				}
-				else
-				{
-					UpdateNodes();
-				}
+				//if (!moved)
+				//{
+				//	if (g_pEnemy->dead)
+				//	{
+				//		// Delete enemies here.
+				//		delete g_pEnemy;
+				//		g_pEnemy = nullptr;
+				//	}
+				//}
+				//else
+				//{
+				//	UpdateNodes();
+				//}
 			}
 
-		const Uint8* pStates = SDL_GetKeyboardState(nullptr);
-		if (pStates[SDL_SCANCODE_D])
+		const Uint8* pStatesP = SDL_GetKeyboardState(nullptr);
+		if (pStatesP[SDL_SCANCODE_D])
 		{
 			//std::cout << "\'d\' key is down\n";
 			if (g_pPlayer->m_dir == DirectionState::right)
@@ -77,23 +145,14 @@ void Update(float elapsedSec)
 				 bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 				n = nullptr;
-
-				if (!moved)
-				{
-					if (g_pPlayer->dead)
-					{
-						// Delete player here.
-						delete g_pPlayer;
-						g_pPlayer = nullptr;
-					}
-				}
+				KillPlayer(moved);
 			}
 			else
 			{
 				g_pPlayer->m_dir = DirectionState::right;
 			}
 		}
-		if (pStates[SDL_SCANCODE_A])
+		if (pStatesP[SDL_SCANCODE_A])
 		{
 			//std::cout << "\'a\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::left)
@@ -102,23 +161,14 @@ void Update(float elapsedSec)
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 				n = nullptr;
-
-				if (!moved)
-				{
-					if (g_pPlayer->dead)
-					{
-						// Delete player here.
-						delete g_pPlayer;
-						g_pPlayer = nullptr;
-					}
-				}
+				KillPlayer(moved);
 			}
 			else
 			{
 				g_pPlayer->m_dir = DirectionState::left;
 			}
 		}
-		if (pStates[SDL_SCANCODE_W])
+		if (pStatesP[SDL_SCANCODE_W])
 		{
 			//std::cout << "\'w\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::up)
@@ -127,23 +177,14 @@ void Update(float elapsedSec)
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 				n = nullptr;
-
-				if (!moved)
-				{
-					if (g_pPlayer->dead)
-					{
-						// Delete player here.
-						delete g_pPlayer;
-						g_pPlayer = nullptr;
-					}
-				}
+				KillPlayer(moved);
 			}
 			else
 			{
 				g_pPlayer->m_dir = DirectionState::up;
 			}
 		}
-		if (pStates[SDL_SCANCODE_S])
+		if (pStatesP[SDL_SCANCODE_S])
 		{
 			//std::cout << "\'s\' keys is down\n";
 			if (g_pPlayer->m_dir == DirectionState::down)
@@ -152,16 +193,7 @@ void Update(float elapsedSec)
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
 				delete n;
 				n = nullptr;
-
-				if (!moved)
-				{
-					if (g_pPlayer->dead)
-					{
-						// Delete player here.
-						delete g_pPlayer;
-						g_pPlayer = nullptr;
-					}
-				}
+				KillPlayer(moved);
 			}
 			else
 			{
@@ -284,7 +316,7 @@ void InitializeMatrix()
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','c','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','b','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','b','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
 							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
@@ -615,7 +647,7 @@ void InitializePlayer()
 	iniSuccess[1] = TextureFromFile("Resources/Player/p_right.png", g_PlayerTextures[1]);
 	iniSuccess[2] = TextureFromFile("Resources/Player/p_down.png", g_PlayerTextures[2]);
 	iniSuccess[3] = TextureFromFile("Resources/Player/p_left.png", g_PlayerTextures[3]);
-
+	
 	for (int i{}; i < g_AmountOfText; i++)
 	{
 		if (!iniSuccess[i])
@@ -694,6 +726,49 @@ void InitializeBullet()
 		}
 	}
 	g_pBulletTextures = g_BulletTextures;
+}
+
+void InitBackgroundMusic()
+{
+	//you can switch songs by chaanging the digit from 1- 4
+	const char* song{ "Resources/Sounds/bc_music2.mp3" };
+
+	int audioHertz{ 22050 }; //default is 22050
+	Uint16 audioFormat{ AUDIO_S16SYS };
+	int audioChannel{ 2 };
+	int audioBuffer{ 4096 };
+	if (Mix_OpenAudio(audioHertz, audioFormat, audioChannel, audioBuffer) != 0)
+	{
+		std::cout << "Rip audio\n";
+	}
+	Mix_Volume(0, MIX_MAX_VOLUME / 20);
+	//Mix_PlayChannel(-1, Mix_LoadWAV(song), 0);
+}
+
+void KillEnemy(bool moved)
+{
+	if (!moved)
+	{
+		if (g_pEnemy->dead)
+		{
+			// Delete player here.
+			delete g_pEnemy;
+			g_pEnemy = nullptr;
+		}
+	}
+}
+
+void KillPlayer(bool moved)
+{
+	if (!moved)
+	{
+		if (g_pPlayer->dead)
+		{
+			// Delete player here.
+			delete g_pPlayer;
+			g_pPlayer = nullptr;
+		}
+	}
 }
 
 #pragma endregion ownDefinitions

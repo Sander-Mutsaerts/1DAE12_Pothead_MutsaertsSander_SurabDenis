@@ -242,3 +242,16 @@ struct NodeMap
 	NodeNeighbours* GetNeighbours(const int x, const int y);
 };
 
+//struct Sound
+//{
+//	int audioHertz; //default is 22050
+//	Uint16 audioFormat; //default is 22050 AUDIO_S16SYS
+//	int audioChannel; //stereo for 2
+//	int audioBuffer; // some sort of bytes or smth  default 4096
+//	
+//	Sound();
+//	~Sound();
+//	Sound LowerVolume(int divisor);
+//	Sound PlaySound();
+//
+//};
