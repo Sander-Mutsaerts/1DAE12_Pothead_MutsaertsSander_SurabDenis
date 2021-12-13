@@ -16,10 +16,11 @@ float g_WindowHeight{ 720 };
 /*	- g_GridScaler =	Default must be one, will use GCD of the resolution to get a standard grid
 */
 const int g_GridScaler{2};
+bool g_SpeedChecker[4]{false, false, false, false};
 int g_CellPixelSize{};
 int g_NrFrames{};
-int devisorSpeedP{30};
-int devisorSpeedE{40};// the bigger the slower the game goes
+int g_DevisorSpeedP{15};
+int g_DevisorSpeedE{ g_DevisorSpeedP };// the bigger the slower the game goes
 bool g_DidZombieCaughtUpToThePlayer{ false };
 bool g_DidTheTimeRunOut{ false };
 Matrix* g_pMatrix{ new Matrix{} };
@@ -27,8 +28,17 @@ NodeMap* g_pNodeMap{ new NodeMap{} };
 Texture g_TimerText{};
 const Color4f g_TimerColour{1,1,1,1};
 const int g_TimerFontSize{48};
-int g_Timer{60};
+int g_MaxTime{100};
+int g_Timer{ g_MaxTime };
 void UpdateTimer(float elapsedTime);
+
+bool g_WasBeartTrapPlacedByPlayer{ false };
+Point2f g_BearTrapPos{};
+
+Texture g_EndScreenWinText{};
+Texture g_EndScreenLooseText{};
+const Color4f g_EndScreenFontColurForText{ 0,0.5f,1,1 };
+const int g_EndScreenFontSizeForText{ 50 };
 
 Enemy* g_pEnemy{nullptr};
 Player* g_pPlayer{nullptr};
@@ -50,8 +60,7 @@ Texture* g_pEnemyTexture{nullptr};
 Texture g_Unpassable{};
 Texture g_Passable{};
 
-Texture g_BulletTextures[g_AmountOfText]{};
-Texture* g_pBulletTextures{};
+Texture g_TrapTexture{};
 
 // Declare your own functions here
 void InitializeMatrix();
@@ -59,19 +68,23 @@ void InitializePlayer();
 void InitializeEnemy();
 void InitializeGun();
 void InitializeBullet();
+void InitializeTrap();
 void InitializeGrid();
-void InitBackgroundMusic();
-void InitTimer();
+void InitializeBackgroundMusic();
+void InitializeTimer();
+void InitializeEndScreenText();
 void DrawGrid();
 void DrawTextures();
 void DrawTimer();
 void UpdateNodes();
+void UpdateSpeed();
 float Heuristic(GridPosition pos, GridPosition endPos);
 bool AStar();
 GridPosition FindMoveEnemy(GridPosition currentPos);
 DirectionState FindMoveDir(GridPosition enemy, GridPosition move);
 void KillEnemy(bool moved);
 void KillPlayer(bool moved);
+void DrawEndScreen();
 
 
 #pragma endregion ownDeclarations

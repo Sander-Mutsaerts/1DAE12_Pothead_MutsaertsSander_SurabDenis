@@ -13,8 +13,10 @@ void Start()
 	InitializeGrid();
 	InitializeGun();
 	InitializeBullet();
-	InitBackgroundMusic();
-	InitTimer();
+	InitializeBackgroundMusic();
+	InitializeTimer();
+	InitializeTrap();
+	InitializeEndScreenText();
 }
 
 void Draw()
@@ -26,6 +28,7 @@ void Draw()
 	DrawGrid();
 	DrawTextures();
 	DrawTimer();
+	DrawEndScreen();
 }
 
 void Update(float elapsedSec)
@@ -35,9 +38,10 @@ void Update(float elapsedSec)
 	// e.g. Check keyboard state
 	g_NrFrames++;
 	UpdateTimer(elapsedSec);
+	UpdateSpeed();
 
 
-	if (!(g_NrFrames % devisorSpeedE) && g_pEnemy != nullptr)
+	if (!(g_NrFrames % g_DevisorSpeedE) && g_pEnemy != nullptr)
 	{
 		const Uint8* pStatesE = SDL_GetKeyboardState(nullptr);
 
@@ -107,10 +111,6 @@ void Update(float elapsedSec)
 			}
 		}
 	}
-	else
-	{
-		g_DidZombieCaughtUpToThePlayer = true;
-	}
 	//Neighbours* n = g_pMatrix->GetNeighbours(g_pEnemy->m_GridPos.x, g_pEnemy->m_GridPos.y);
 
 
@@ -137,7 +137,7 @@ void Update(float elapsedSec)
 	//{
 	//	UpdateNodes();
 	//}
-if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
+if (!(g_NrFrames % g_DevisorSpeedP) && g_pPlayer != nullptr)
 {
 		const Uint8* pStatesP = SDL_GetKeyboardState(nullptr);
 		if (pStatesP[SDL_SCANCODE_D])
@@ -147,6 +147,10 @@ if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
+				/*if (!g_WasBeartTrapPlacedByPlayer)
+				{
+					g_pMatrix->MoveB(*g_pBullet, *n);
+				}*/
 				delete n;
 				n = nullptr;
 				KillPlayer(moved);
@@ -163,6 +167,10 @@ if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
+				/*if (!g_WasBeartTrapPlacedByPlayer)
+				{
+					g_pMatrix->MoveB(*g_pBullet, *n);
+				}*/
 				delete n;
 				n = nullptr;
 				KillPlayer(moved);
@@ -179,6 +187,10 @@ if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
+				/*if (!g_WasBeartTrapPlacedByPlayer)
+				{
+					g_pMatrix->MoveB(*g_pBullet, *n);
+				}*/
 				delete n;
 				n = nullptr;
 				KillPlayer(moved);
@@ -195,6 +207,10 @@ if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
 			{
 				Neighbours* n = g_pMatrix->GetNeighbours(g_pPlayer->m_GridPos.x, g_pPlayer->m_GridPos.y);
 				bool moved = g_pMatrix->MoveP(*g_pPlayer, *n);
+				/*if (!g_WasBeartTrapPlacedByPlayer)
+				{
+					g_pMatrix->MoveB(*g_pBullet, *n);
+				}*/
 				delete n;
 				n = nullptr;
 				KillPlayer(moved);
@@ -205,11 +221,6 @@ if (!(g_NrFrames % devisorSpeedP) && g_pPlayer != nullptr)
 			}
 		}
 	}
-
-else
-{
-	g_DidZombieCaughtUpToThePlayer = true;
-}
 }
 
 void End()
@@ -235,19 +246,12 @@ void OnKeyDownEvent(SDL_Keycode key)
 
 void OnKeyUpEvent(SDL_Keycode key)
 {
-	//switch (key)
-	//{
-	//case SDLK_LEFT:
-	//	//std::cout << "Left arrow key released\n";
-	//	break;
-	//case SDLK_RIGHT:
-	//	//std::cout << "Right arrow key released\n";
-	//	break;
-	//case SDLK_1:
-	//case SDLK_KP_1:
-	//	//std::cout << "Key 1 released\n";
-	//	break;
-	//}
+	switch (key)
+	{
+	case SDLK_SPACE:
+		g_WasBeartTrapPlacedByPlayer = true;
+		break;
+	}
 }
 
 void OnMouseMotionEvent(const SDL_MouseMotionEvent& e)
@@ -312,24 +316,24 @@ void InitializeMatrix()
 	MatrixElement* pArray = new MatrixElement[arraySize];
 	Node* pMapArray = new Node[arraySize];
 	MatrixChar mapArray{ sizeX, sizeY,
-		new char[arraySize]{'i','p','p','p','p','p','i','i','i','i','i','i','i','i','p','p','p','p','i','i','i','i','i','i','i','i','i','i','i','i','i','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
-							'i','p','p','z','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','i','i','i','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','c','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','b','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
-							'i','i','i','i','i','i','i','i','i','i','i','i','i','i','p','p','p','p','i','i','i','i','i','i','i','i','p','p','p','p','p','i'} };
+		new char[arraySize]{	'i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i',
+							'i','z','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','i','p','i','p','p','p','p','p','p','i',
+							'i','p','p','p','p','p','i','p','p','p','p','p','p','i','p','i','i','p','p','p','p','p','i','p','p','p','p','p','p','p','p','i',
+							'i','p','p','i','p','p','i','p','p','p','p','p','p','i','p','i','i','p','p','p','i','p','p','p','i','p','p','p','i','p','p','i',
+							'i','p','p','i','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','i','p','i','p','p','p','i','p','p','i',
+							'i','p','p','i','p','p','i','p','p','p','p','p','p','p','p','p','p','p','i','i','i','i','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','i','i','p','i','p','p','i','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','i','i','p','i','i',
+							'i','p','i','i','p','p','i','p','p','i','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','p','p','p','i','p','i','i','i','p','p','i','i','i','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','i','p','i','p','p','i','p','p','i','p','p','p','i','p','p','p','p','i','p','p','i','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','i','p','p','i','p','p','i','p','p','p','i','p','p','p','p','i','p','p','i','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','i','p','p','i','p','p','p','p','p','p','i','p','p','i','i','i','p','i','i','i','p','p','i','i','p','i','i','p','i',
+							'i','p','p','i','p','p','i','p','p','p','i','i','i','i','p','p','p','p','p','p','p','i','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','i','p','i','p','p','p','p','p','p','p','i','p','p','p','p','i','p','p','i','p','p','p','i','p','p','i','p','p','i',
+							'i','p','p','p','p','i','p','p','p','i','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','p','i',
+							'i','p','p','p','p','i','p','p','p','i','p','p','p','i','p','p','p','p','i','p','p','p','p','p','p','i','p','p','p','p','c','i',
+							'i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i','i'} };
 	//------------------------------------------Initializing matrix cells----------------------------------------------
 	for (int i{}; i < arraySize; i++)
 	{
@@ -607,7 +611,10 @@ void DrawTextures()
 
 			break;
 		case WorldState::danger:
-			DrawTexture(g_BulletTextures[int(g_pBullet->m_dir)], origin);
+			if (g_WasBeartTrapPlacedByPlayer)
+			{
+				DrawTexture(g_TrapTexture, origin);
+			}
 			break;
 		case WorldState::player:
 			if (g_pPlayer->m_dir == DirectionState::left)
@@ -737,26 +744,30 @@ void InitializeGrid()
 }
 void InitializeBullet()
 {
-	bool iniSuccess[g_AmountOfText]{};
-	iniSuccess[0] = TextureFromFile("Resources/Bullet/b_up.png", g_BulletTextures[0]);
-	iniSuccess[1] = TextureFromFile("Resources/Bullet/b_right.png", g_BulletTextures[1]);
-	iniSuccess[2] = TextureFromFile("Resources/Bullet/b_down.png", g_BulletTextures[2]);
-	iniSuccess[3] = TextureFromFile("Resources/Bullet/b_left.png", g_BulletTextures[3]);
+	//bool iniSuccess[g_AmountOfText]{};
+	//iniSuccess[0] = TextureFromFile("Resources/Bullet/b_up.png", g_TrapTexture[0]);
+	//iniSuccess[1] = TextureFromFile("Resources/Bullet/b_right.png", g_TrapTexture[1]);
+	//iniSuccess[2] = TextureFromFile("Resources/Bullet/b_down.png", g_TrapTexture[2]);
+	//iniSuccess[3] = TextureFromFile("Resources/Bullet/b_left.png", g_TrapTexture[3]);
 
-	for (int i{}; i < g_AmountOfText; i++)
-	{
-		if (!iniSuccess[i])
-		{
-			std::cout << "Texture for bullet failed to load INDEX: " << iniSuccess[i] << '\n';
-		}
-	}
-	g_pBulletTextures = g_BulletTextures;
+	//for (int i{}; i < g_AmountOfText; i++)
+	//{
+	//	if (!iniSuccess[i])
+	//	{
+	//		std::cout << "Texture for bullet failed to load INDEX: " << iniSuccess[i] << '\n';
+	//	}
+	//}
+	//g_pBulletTextures = g_TrapTexture;
+}
+void InitializeTrap()
+{
+	if(!TextureFromFile("Resources/Interactables/beartrap.png", g_TrapTexture)) std::cout << "Texture for Trap failed to load: \n";
 }
 
-void InitBackgroundMusic()
+void InitializeBackgroundMusic()
 {
 	//you can switch songs by chaanging the digit from 1- 4
-	const char* song{ "Resources/Sounds/bc_music2.mp3" };
+	const char* song{ "Resources/Sounds/bc_music1.mp3" };
 
 	int audioHertz{ 22050 }; //default is 22050
 	Uint16 audioFormat{ AUDIO_S16SYS };
@@ -767,7 +778,7 @@ void InitBackgroundMusic()
 		std::cout << "Rip audio\n";
 	}
 	Mix_Volume(0, MIX_MAX_VOLUME / 20);
-	//Mix_PlayChannel(-1, Mix_LoadWAV(song), 0);
+	Mix_PlayChannel(-1, Mix_LoadWAV(song), 0);
 }
 
 void KillEnemy(bool moved)
@@ -779,6 +790,7 @@ void KillEnemy(bool moved)
 			// Delete player here.
 			delete g_pEnemy;
 			g_pEnemy = nullptr;
+			g_DidZombieCaughtUpToThePlayer = true;
 		}
 	}
 }
@@ -792,12 +804,13 @@ void KillPlayer(bool moved)
 			// Delete player here.
 			delete g_pPlayer;
 			g_pPlayer = nullptr;
+			g_DidZombieCaughtUpToThePlayer = true;
 		}
 	}
 }
-void InitTimer()
+void InitializeTimer()
 {
-	if (!TextureFromString("Hi Boomer", "Resources/Fonts/RobotoMono-Medium.ttf", g_TimerFontSize, g_TimerColour, g_TimerText)) std::cout << "Image not found DIN-Light.otf\n";
+	if (!TextureFromString("Hi Boomer", "Resources/Fonts/RobotoMono-Medium.ttf", g_TimerFontSize, g_TimerColour, g_TimerText)) std::cout << "Image not found RobotoMono-Medium.ttf\n";
 }
 
 void UpdateTimer(float elapsedTime)
@@ -817,4 +830,64 @@ void UpdateTimer(float elapsedTime)
 	}
 }
 
+void InitializeEndScreenText()
+{
+	if (!TextureFromString("Player survived and won!", "Resources/Fonts/RobotoMono-Medium.ttf", g_EndScreenFontSizeForText, g_EndScreenFontColurForText, g_EndScreenWinText)) std::cout << "Image not found RobotoMono-Medium.ttf\n";
+	if (!TextureFromString("Zombie has eaten your brain!", "Resources/Fonts/RobotoMono-Medium.ttf", g_EndScreenFontSizeForText, g_EndScreenFontColurForText, g_EndScreenLooseText)) std::cout << "Image not found RobotoMono-Medium.ttf\n";
+}
+
+void DrawEndScreen()
+{
+	Point2f pos1{ g_WindowWidth / 2.f - (g_EndScreenLooseText.width / 2.f) , g_WindowHeight / 2.f};
+	Point2f pos2{ g_WindowWidth / 2.f - (g_EndScreenWinText.width / 2.f) , g_WindowHeight / 2.f };
+
+	if (g_DidZombieCaughtUpToThePlayer)
+	{
+		SetColor(0,0,0,1);
+		FillRect(0, 0, g_WindowWidth, g_WindowHeight);
+		DrawTexture(g_EndScreenLooseText, pos1);
+
+	}
+	else if (g_DidTheTimeRunOut)
+	{
+		SetColor(0, 0, 0, 1);
+		FillRect(0, 0, g_WindowWidth, g_WindowHeight);
+		DrawTexture(g_EndScreenWinText, pos2);
+	}
+}
+void UpdateSpeed()
+{
+	int bonusSpeed{g_DevisorSpeedP / 10};
+	if (g_Timer < (g_MaxTime * 3 / 4) 
+		&& g_Timer > (g_MaxTime / 2)
+		&& g_SpeedChecker[0] == false)
+	{
+		g_DevisorSpeedE -= bonusSpeed;
+		//std::cout << g_DevisorSpeedE;
+		g_SpeedChecker[0] = true;
+	}
+	else if (g_Timer < (g_MaxTime / 2) 
+		&& g_Timer > (g_MaxTime / 3)
+		&& g_SpeedChecker[1] == false)
+	{
+		g_DevisorSpeedE -= bonusSpeed;
+		//std::cout << g_DevisorSpeedE;
+		g_SpeedChecker[1] = true;
+	}
+	else if (g_Timer < (g_MaxTime / 3) 
+		&& g_Timer >(g_MaxTime / 4)
+		&& g_SpeedChecker[2] == false)
+	{
+		g_DevisorSpeedE -= bonusSpeed;
+		//std::cout << g_DevisorSpeedE;
+		g_SpeedChecker[2] = true;
+	}
+	else if (g_Timer < (g_MaxTime / 4) 
+		&& g_SpeedChecker[3] == false)
+	{
+		g_DevisorSpeedE -= bonusSpeed;
+		//std::cout << g_DevisorSpeedE;
+		g_SpeedChecker[3] = true;
+	}
+}
 #pragma endregion ownDefinitions
